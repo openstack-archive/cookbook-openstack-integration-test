@@ -1,0 +1,169 @@
+[identity]
+
+catalog_type = identity
+
+disable_ssl_certificate_validation = <%= @tempest_disable_ssl_validation %>
+
+uri = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v2.0/
+uri_v3 = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v3/
+
+strategy = keystone
+
+region = RegionOne
+
+username = <%= @tempest_user1 %>
+password = <%= @tempest_user1_pass %>
+tenant_name = <%= @tempest_user1_tenant %>
+
+alt_username = <%= @tempest_user2 %>
+alt_password = <%= @tempest_user2_pass %>
+alt_tenant_name = <%= @tempest_user2_tenant %>
+
+admin_username = <%= @tempest_admin %>
+admin_password = <%= @tempest_admin_pass %>
+admin_tenant_name = <%= @tempest_admin_tenant %>
+
+[compute]
+image_alt_ssh_user = <%= @tempest_alt_ssh_user %>
+image_ssh_user = <%= @tempest_ssh_user %>
+
+allow_tenant_isolation = <%= @tempest_tenant_isolation %>
+
+allow_tenant_reuse = <%= @tempest_tenant_reuse %>
+
+image_ref = <%= node['openstack']['integration-test']['image1']['id'] %>
+image_ref_alt = <%= node['openstack']['integration-test']['image2']['id'] %>
+flavor_ref = <%= @tempest_img_flavor1 %>
+flavor_ref_alt = <%= @tempest_img_flavor2 %>
+
+build_interval = 3
+
+build_timeout = 400
+
+run_ssh = false
+
+ssh_user = <%= @tempest_ssh_user %>
+
+network_for_ssh = private
+
+ip_version_for_ssh = 4
+
+ssh_timeout = 400
+
+ssh_channel_timeout = 60
+
+catalog_type = compute
+
+create_image_enabled = true
+
+resize_available = true
+
+change_password_available=false
+
+live_migration_available = False
+
+use_block_migration_for_live_migration = False
+
+disk_config_enabled_override = true
+
+[identity-feature-enabled]
+api_v3 = false
+
+[whitebox]
+
+whitebox_enabled = false
+
+source_dir = /usr/share/pyshared/nova
+
+config_path = /etc/nova/nova.conf
+
+bin_dir = /usr/bin
+
+path_to_private_key =
+
+db_uri =
+
+[compute-admin]
+username = <%= @tempest_admin %>
+password = <%= @tempest_admin_pass %>
+tenant_name = <%= @tempest_admin_tenant %>
+
+[compute-feature-enabled]
+api_v3 = false
+
+[image]
+catalog_type = image
+
+api_version = 1
+
+[network]
+
+api_version = 2.0
+catalog_type = network
+
+tenant_network_cidr = 10.100.0.0/16
+
+tenant_network_mask_bits = 29
+
+tenant_networks_reachable = false
+
+public_network_id =
+
+public_router_id =
+
+quantum_available = false
+
+[volume]
+
+catalog_type = volume
+build_interval = 3
+build_timeout = 400
+backup = false
+
+[object-storage]
+
+catalog_type = object-store
+
+container_sync_timeout = 120
+container_sync_interval = 5
+
+[boto]
+ssh_user = cirros
+
+ec2_url =
+s3_url =
+
+aws_access =
+aws_secret =
+
+s3_materials_path = /opt/stack/devstack/files/images/s3-materials/cirros-0.3.0
+
+ari_manifest = cirros-0.3.0-x86_64-initrd.manifest.xml
+
+ami_manifest = cirros-0.3.0-x86_64-blank.img.manifest.xml
+
+aki_manifest = cirros-0.3.0-x86_64-vmlinuz.manifest.xml
+
+instance_type = m1.tiny
+
+http_socket_timeout = 30
+
+num_retries = 1
+
+build_timeout = 400
+
+build_interval = 3
+
+[service_available]
+marconi = False
+trove = False
+savanna = False
+ironic = False
+ceilometer = False
+horizon = True
+heat = False
+swift = False
+neutron = False
+glance = True
+cinder = True
+nova = True
