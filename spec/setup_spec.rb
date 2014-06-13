@@ -99,6 +99,28 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
+    it 'uploads image1' do
+      expect(chef_run).to upload_openstack_image_image('image1').with(
+        identity_user: 'admin',
+        identity_pass: 'admin',
+        identity_tenant: 'admin',
+        identity_uri: 'http://127.0.0.1:35357/v2.0',
+        image_name: 'cirros',
+        image_url: 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+      )
+    end
+
+    it 'uploads image2' do
+      expect(chef_run).to upload_openstack_image_image('image2').with(
+        identity_user: 'admin',
+        identity_pass: 'admin',
+        identity_tenant: 'admin',
+        identity_uri: 'http://127.0.0.1:35357/v2.0',
+        image_name: 'cirros',
+        image_url: 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+      )
+    end
+
     it 'runs ruby_block for image1' do
       expect(chef_run).to run_ruby_block("Get and set image1's ID")
     end

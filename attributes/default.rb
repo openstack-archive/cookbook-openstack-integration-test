@@ -38,12 +38,14 @@ default['openstack']['integration-test'] = {
     'image1' => {
         'name' => 'cirros',
         'id' => nil,
-        'flavor' => 1
+        'flavor' => 1,
+        'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
     },
     'image2' => {
         'name' => 'cirros',
         'id' => nil,
-        'flavor' => 1
+        'flavor' => 1,
+        'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
     }
 }
 

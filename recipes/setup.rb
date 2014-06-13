@@ -82,17 +82,26 @@ git '/opt/tempest' do
 end
 
 %w{image1 image2}.each do |img|
+  image_name   = node['openstack']['integration-test'][img]['name']
+  admin_user   = node['openstack']['identity']['admin_user']
+  admin_tenant = node['openstack']['identity']['admin_tenant_name']
+
+  openstack_image_image img do
+    identity_user admin_user
+    identity_pass admin_pass
+    identity_tenant admin_tenant
+    identity_uri auth_uri
+    image_name image_name
+    image_url node['openstack']['integration-test'][img]['source']
+  end
+
   # NOTE: This has to be done in a ruby_block so it gets executed at execution
   #       time and not compile time (when glance does not yet exist).
   ruby_block "Get and set #{img}'s ID" do
     block do
       begin
-        admin_user   = node['openstack']['identity']['admin_user']
-        admin_tenant = node['openstack']['identity']['admin_tenant_name']
-        image_name   = node['openstack']['integration-test'][img]['name']
         env          = openstack_command_env admin_user, admin_tenant
         id           = image_id image_name, env
-
         node.set['openstack']['integration-test'][img]['id'] = id
       rescue RuntimeError => e
         Chef::Log.error("UUID not found for Glance image #{image_name}. Error was #{e.message}")
