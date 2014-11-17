@@ -1,18 +1,20 @@
 # Testing the Cookbook #
 
-This cookbook uses [bundler](http://gembundler.com/), [berkshelf](http://berkshelf.com/), and [strainer](https://github.com/customink/strainer) to isolate dependencies and run tests.
+This cookbook uses [bundler](http://gembundler.com/) and [berkshelf](http://berkshelf.com/) to isolate dependencies.
+Make sure you have `ruby 1.9.x`, `bundler`, `rake`, build essentials and the header files for `gecode` installed before continuing. Make sure that you're using gecode version 3. More info [here](https://github.com/opscode/dep-selector-libgecode/tree/0bad63fea305ede624c58506423ced697dd2545e#using-a-system-gecode-instead).
 
-Tests are defined in [Strainerfile](Strainerfile), which in turn calls rubocop, knife, foodcritic and chefspec.
+We have four test suites which you can run either, individually (there are three rake tasks):
 
-To run all of the tests with Strainer:
+    $ rake lint
+    $ rake style
+    $ rake knife
+    $ rake unit
 
-    $ bundle exec strainer test -s Strainerfile
+or altogether:
 
-Or you may run the tests individually:
+    $ rake test
 
-    $ bundle install --path=.bundle # install gem dependencies
-    $ bundle exec berks vendor .cookbooks # install cookbook dependencies and create the folder .cookbooks
-    $ bundle exec strainer test -s Strainerfile # run tests
+The `rake` tasks will take care of installing the needed gem dependencies and cookbooks with `berkshelf`.
 
 ## Rubocop  ##
 
