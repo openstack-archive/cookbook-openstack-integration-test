@@ -35,8 +35,8 @@ platform_options['tempest_packages'].each do |pkg|
   end
 end
 
-identity_admin_endpoint = endpoint 'identity-admin'
-identity_api_endpoint   = endpoint 'identity-api'
+identity_admin_endpoint = admin_endpoint 'identity-admin'
+identity_api_endpoint   = internal_endpoint 'identity-api'
 bootstrap_token         = get_secret 'openstack_identity_bootstrap_token'
 auth_uri                = ::URI.decode identity_admin_endpoint.to_s
 admin_pass              = get_password 'user', node['openstack']['identity']['admin_user']
