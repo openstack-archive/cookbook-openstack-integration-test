@@ -11,12 +11,8 @@ recipe            'openstack-integration-test::setup', 'Installs and configures 
   supports os
 end
 
-%w{
-  openstack-common
-  openstack-identity
-  openstack-image
-  openstack-compute
-  openstack-block-storage
-}.each do |dep|
-  depends dep
-end
+depends           'openstack-common', '>= 10.2.0'
+depends           'openstack-identity', '>= 10.0.0'
+depends           'openstack-image', '>= 10.0.0'
+depends           'openstack-compute', '>= 10.0.0'
+depends           'openstack-block-storage', '>= 10.0.0'
