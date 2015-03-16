@@ -65,6 +65,17 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
     action :create_user
   end
 
+  openstack_identity_register "Create tempest role #{i}" do
+    auth_uri        auth_uri
+    bootstrap_token bootstrap_token
+    tenant_name     node['openstack']['integration-test'][user]['tenant_name']
+    user_name       node['openstack']['integration-test'][user]['user_name']
+    user_pass       node['openstack']['integration-test'][user]['password']
+    role_name       'Member'
+
+    action :create_role
+  end
+
   openstack_identity_register "Grant 'member' Role to tempest user for tempest tenant ##{i}" do
     auth_uri        auth_uri
     bootstrap_token bootstrap_token

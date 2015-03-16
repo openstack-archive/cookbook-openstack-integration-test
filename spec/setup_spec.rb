@@ -43,6 +43,19 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
+    it 'creates member role to tempest_user1 for tempest_tenant1' do
+      expect(chef_run).to create_role_openstack_identity_register(
+        'Create tempest role 1'
+      ).with(
+        auth_uri: 'http://127.0.0.1:35357/v2.0',
+        bootstrap_token: 'bootstrap-token',
+        tenant_name: 'tempest_tenant1',
+        user_name: 'tempest_user1',
+        user_pass: 'tempest_user1_pass',
+        role_name: 'Member'
+      )
+    end
+
     it 'grants member role to tempest_user1 for tempest_tenant1' do
       expect(chef_run).to grant_role_openstack_identity_register(
         "Grant 'member' Role to tempest user for tempest tenant #1"
@@ -75,6 +88,19 @@ describe 'openstack-integration-test::setup' do
         tenant_name: 'tempest_tenant2',
         user_name: 'tempest_user2',
         user_pass: 'tempest_user2_pass'
+      )
+    end
+
+    it 'creates member role to tempest_user2 for tempest_tenant2' do
+      expect(chef_run).to create_role_openstack_identity_register(
+        'Create tempest role 2'
+      ).with(
+        auth_uri: 'http://127.0.0.1:35357/v2.0',
+        bootstrap_token: 'bootstrap-token',
+        tenant_name: 'tempest_tenant2',
+        user_name: 'tempest_user2',
+        user_pass: 'tempest_user2_pass',
+        role_name: 'Member'
       )
     end
 
