@@ -90,7 +90,7 @@ end
 git '/opt/tempest' do
   repository 'https://github.com/openstack/tempest'
   reference   'master'
-
+  depth 1
   action :sync
 end
 

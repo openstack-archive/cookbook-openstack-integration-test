@@ -121,7 +121,8 @@ describe 'openstack-integration-test::setup' do
         '/opt/tempest'
       ).with(
         repository: 'https://github.com/openstack/tempest',
-        reference: 'master'
+        reference: 'master',
+        depth: 1
       )
     end
 
