@@ -19,49 +19,49 @@
 #
 
 default['openstack']['integration-test'] = {
-    'branch' => nil,
-    'disable_ssl_validation' => false,
-    'tenant_isolation' => true,
-    'tenant_reuse' => true,
-    'alt_ssh_user' => 'cirros',
-    'ssh_user' => 'cirros',
-    'user1' => {
-        'user_name' => 'tempest_user1',
-        'password' => 'tempest_user1_pass',
-        'tenant_name' => 'tempest_tenant1'
-    },
-    'user2' => {
-        'user_name' => 'tempest_user2',
-        'password' => 'tempest_user2_pass',
-        'tenant_name' => 'tempest_tenant2'
-    },
-    'image1' => {
-        'name' => 'cirros',
-        'id' => nil,
-        'flavor' => 1,
-        'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
-    },
-    'image2' => {
-        'name' => 'cirros',
-        'id' => nil,
-        'flavor' => 1,
-        'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
-    }
+  'branch' => nil,
+  'disable_ssl_validation' => false,
+  'tenant_isolation' => true,
+  'tenant_reuse' => true,
+  'alt_ssh_user' => 'cirros',
+  'ssh_user' => 'cirros',
+  'user1' => {
+    'user_name' => 'tempest_user1',
+    'password' => 'tempest_user1_pass',
+    'tenant_name' => 'tempest_tenant1'
+  },
+  'user2' => {
+    'user_name' => 'tempest_user2',
+    'password' => 'tempest_user2_pass',
+    'tenant_name' => 'tempest_tenant2'
+  },
+  'image1' => {
+    'name' => 'cirros',
+    'id' => nil,
+    'flavor' => 1,
+    'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+  },
+  'image2' => {
+    'name' => 'cirros',
+    'id' => nil,
+    'flavor' => 1,
+    'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+  }
 }
 
 # platform-specific settings
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w{git python-virtualenv libxslt-devel
+    'tempest_packages' => %w(git python-virtualenv libxslt-devel
                              libxml2-devel python-testrepository
-                             libffi-devel},
+                             libffi-devel),
     'package_overrides' => ''
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w{git libxml2-dev libxslt-dev testrepository
-                             python-dev libffi-dev},
+    'tempest_packages' => %w(git libxml2-dev libxslt-dev testrepository
+                             python-dev libffi-dev),
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

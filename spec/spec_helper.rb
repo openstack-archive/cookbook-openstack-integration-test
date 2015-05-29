@@ -8,14 +8,14 @@ require 'chef/application'
 
 LOG_LEVEL = :fatal
 REDHAT_OPTS = {
-  platform:  'redhat',
-  version:   '7.1',
+  platform: 'redhat',
+  version: '7.1',
   log_level: LOG_LEVEL
 }
 UBUNTU_OPTS = {
-    platform:  'ubuntu',
-    version:   '14.04',
-    log_level: LOG_LEVEL
+  platform: 'ubuntu',
+  version: '14.04',
+  log_level: LOG_LEVEL
 }
 
 shared_context 'tempest-stubs' do
