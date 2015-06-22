@@ -39,7 +39,7 @@ identity_admin_endpoint = admin_endpoint 'identity-admin'
 # Since this is testing things from the user's perspective,
 # use the public identity endpoint
 identity_api_endpoint   = public_endpoint 'identity-api'
-bootstrap_token         = get_secret 'openstack_identity_bootstrap_token'
+bootstrap_token         = get_password 'token', 'openstack_identity_bootstrap_token'
 auth_uri                = ::URI.decode identity_admin_endpoint.to_s
 admin_pass              = get_password 'user', node['openstack']['identity']['admin_user']
 

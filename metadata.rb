@@ -11,7 +11,7 @@ recipe 'openstack-integration-test::setup', 'Installs and configures Tempest'
   supports os
 end
 
-depends 'openstack-common', '>= 11.0.0'
+depends 'openstack-common', '>= 11.5.0'
 depends 'openstack-identity', '>= 11.0.0'
 depends 'openstack-image', '>= 11.0.0'
 depends 'openstack-compute', '>= 11.0.0'

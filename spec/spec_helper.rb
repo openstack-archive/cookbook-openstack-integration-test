@@ -28,8 +28,8 @@ shared_context 'tempest-stubs' do
         'OS_AUTH_URL'    => 'http://127.0.0.1:35357/v2.0'
       }
 
-    Chef::Recipe.any_instance.stub(:get_secret)
-      .with('openstack_identity_bootstrap_token')
+    Chef::Recipe.any_instance.stub(:get_password)
+      .with('token', 'openstack_identity_bootstrap_token')
       .and_return('bootstrap-token')
     Chef::Recipe.any_instance.stub(:get_password)
       .with('user', 'admin')
