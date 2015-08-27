@@ -152,5 +152,5 @@ template '/opt/tempest/etc/tempest.conf' do
     'tempest_user2' => node['openstack']['integration-test']['user2']['user_name'],
     'tempest_user2_pass' => node['openstack']['integration-test']['user2']['password'],
     'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['tenant_name']
-   )
+  )
 end
