@@ -35,10 +35,12 @@ platform_options['tempest_packages'].each do |pkg|
   end
 end
 
-identity_admin_endpoint = admin_endpoint 'identity-admin'
+package 'curl'
+
+identity_admin_endpoint = admin_endpoint 'identity'
 # Since this is testing things from the user's perspective,
 # use the public identity endpoint
-identity_api_endpoint   = public_endpoint 'identity-api'
+identity_api_endpoint   = public_endpoint 'identity'
 bootstrap_token         = get_password 'token', 'openstack_identity_bootstrap_token'
 auth_uri                = ::URI.decode identity_admin_endpoint.to_s
 admin_pass              = get_password 'user', node['openstack']['identity']['admin_user']
