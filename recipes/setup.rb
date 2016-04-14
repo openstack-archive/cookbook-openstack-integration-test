@@ -48,11 +48,11 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
 %w(user1 user2).each_with_index do |user, i|
   i += 1
 
-  openstack_identity_register "Register tempest tenant #{i}" do
+  openstack_identity_register "Register tempest project #{i}" do
     auth_uri auth_uri
     bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['tenant_name']
-    tenant_description "Tempest tenant #{i}"
+    tenant_name node['openstack']['integration-test'][user]['project_name']
+    tenant_description "Tempest project #{i}"
 
     action :create_tenant
   end
@@ -60,7 +60,7 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
   openstack_identity_register "Register tempest user #{i}" do
     auth_uri auth_uri
     bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['tenant_name']
+    tenant_name node['openstack']['integration-test'][user]['project_name']
     user_name node['openstack']['integration-test'][user]['user_name']
     user_pass node['openstack']['integration-test'][user]['password']
 
@@ -70,7 +70,7 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
   openstack_identity_register "Create tempest role #{i}" do
     auth_uri auth_uri
     bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['tenant_name']
+    tenant_name node['openstack']['integration-test'][user]['project_name']
     user_name node['openstack']['integration-test'][user]['user_name']
     user_pass node['openstack']['integration-test'][user]['password']
     role_name 'Member'
@@ -78,10 +78,10 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
     action :create_role
   end
 
-  openstack_identity_register "Grant 'member' Role to tempest user for tempest tenant ##{i}" do
+  openstack_identity_register "Grant 'member' Role to tempest user for tempest project ##{i}" do
     auth_uri auth_uri
     bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['tenant_name']
+    tenant_name node['openstack']['integration-test'][user]['project_name']
     user_name node['openstack']['integration-test'][user]['user_name']
     role_name 'Member'
 
@@ -97,14 +97,14 @@ git '/opt/tempest' do
 end
 
 admin_user = node['openstack']['identity']['admin_user']
-admin_tenant = node['openstack']['identity']['admin_tenant_name']
+admin_project = node['openstack']['identity']['admin_tenant_name']
 
 %w(image1 image2).each do |img|
   image_name = node['openstack']['integration-test'][img]['name']
   openstack_image_image img do
     identity_user admin_user
     identity_pass admin_pass
-    identity_tenant admin_tenant
+    identity_tenant admin_project
     identity_uri auth_uri
     image_name image_name
     image_url node['openstack']['integration-test'][img]['source']
@@ -115,7 +115,7 @@ admin_tenant = node['openstack']['identity']['admin_tenant_name']
   ruby_block "Get and set #{img}'s ID" do
     block do
       begin
-        env = openstack_command_env admin_user, admin_tenant
+        env = openstack_command_env admin_user, admin_project
         id = image_id image_name, env
         node.set['openstack']['integration-test'][img]['id'] = id
       rescue RuntimeError => e
@@ -131,7 +131,7 @@ end
 ruby_block 'Create nano flavor 99' do
   block do
     begin
-      env = openstack_command_env(admin_user, admin_tenant)
+      env = openstack_command_env(admin_user, admin_project)
       output = openstack_command('nova', 'flavor-list', env)
       unless output.include? 'm1.nano'
         openstack_command('nova', 'flavor-create m1.nano 99 64 0 1', env)
@@ -155,21 +155,20 @@ template '/opt/tempest/etc/tempest.conf' do
     'tempest_disable_ssl_validation' => node['openstack']['integration-test']['disable_ssl_validation'],
     'identity_endpoint_host' => identity_api_endpoint.host,
     'identity_endpoint_port' => identity_api_endpoint.port,
-    'tempest_tenant_isolation' => node['openstack']['integration-test']['tenant_isolation'],
-    'tempest_tenant_reuse' => node['openstack']['integration-test']['tenant_reuse'],
+    'tempest_use_dynamic_credentials' => node['openstack']['integration-test']['use_dynamic_credentials'],
     'tempest_user1' => node['openstack']['integration-test']['user1']['user_name'],
     'tempest_user1_pass' => node['openstack']['integration-test']['user1']['password'],
-    'tempest_user1_tenant' => node['openstack']['integration-test']['user1']['tenant_name'],
+    'tempest_user1_project' => node['openstack']['integration-test']['user1']['project_name'],
     'tempest_img_flavor1' => node['openstack']['integration-test']['image1']['flavor'],
     'tempest_img_flavor2' => node['openstack']['integration-test']['image2']['flavor'],
     'tempest_admin' => node['openstack']['identity']['admin_user'],
-    'tempest_admin_tenant' => node['openstack']['identity']['admin_tenant_name'],
+    'tempest_admin_project' => admin_project,
     'tempest_admin_pass' => admin_pass,
     'tempest_alt_ssh_user' => node['openstack']['integration-test']['alt_ssh_user'],
     'tempest_ssh_user' => node['openstack']['integration-test']['ssh_user'],
     'tempest_user2' => node['openstack']['integration-test']['user2']['user_name'],
     'tempest_user2_pass' => node['openstack']['integration-test']['user2']['password'],
-    'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['tenant_name'],
+    'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['project_name'],
     'tempest_fixed_network' => node['openstack']['integration-test']['fixed_network']
   )
 end

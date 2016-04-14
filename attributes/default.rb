@@ -21,32 +21,31 @@
 default['openstack']['integration-test'] = {
   'branch' => nil,
   'disable_ssl_validation' => false,
-  'tenant_isolation' => true,
-  'tenant_reuse' => true,
+  'use_dynamic_credentials' => true,
   'alt_ssh_user' => 'cirros',
   'ssh_user' => 'cirros',
   'fixed_network' => 'local_net',
   'user1' => {
     'user_name' => 'tempest_user1',
     'password' => 'tempest_user1_pass',
-    'tenant_name' => 'tempest_tenant1'
+    'project_name' => 'tempest_project1'
   },
   'user2' => {
     'user_name' => 'tempest_user2',
     'password' => 'tempest_user2_pass',
-    'tenant_name' => 'tempest_tenant2'
+    'project_name' => 'tempest_project2'
   },
   'image1' => {
     'name' => 'cirros',
     'id' => nil,
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+    'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
   },
   'image2' => {
     'name' => 'cirros',
     'id' => nil,
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+    'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
   }
 }
 

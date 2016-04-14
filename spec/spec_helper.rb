@@ -28,19 +28,18 @@ shared_context 'tempest-stubs' do
         'OS_AUTH_URL'    => 'http://127.0.0.1:35357/v2.0'
       }
 
-    Chef::Recipe.any_instance.stub(:get_password)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('token', 'openstack_identity_bootstrap_token')
       .and_return('bootstrap-token')
-    Chef::Recipe.any_instance.stub(:get_password)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('user', 'admin')
       .and_return('admin')
-    Chef::Resource::RubyBlock.any_instance.stub(:image_id)
+    allow_any_instance_of(Chef::Resource::RubyBlock).to receive(:image_id)
       .with('cirros', env)
       .and_return('5d1ff378-e9c1-4db7-97c1-d35f07824595')
-    Chef::Resource::RubyBlock.any_instance.stub(:openstack_command_env)
+    allow_any_instance_of(Chef::Resource::RubyBlock).to receive(:openstack_command_env)
       .with('admin', 'admin')
       .and_return(env)
-
-    Chef::Application.stub(:fatal!)
+    allow(Chef::Application).to receive(:fatal!)
   end
 end

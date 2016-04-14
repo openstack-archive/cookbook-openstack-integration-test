@@ -20,14 +20,14 @@ describe 'openstack-integration-test::setup' do
       end
     end
 
-    it 'registers tenant tempest_tenant1' do
+    it 'registers project tempest_project1' do
       expect(chef_run).to create_tenant_openstack_identity_register(
-        'Register tempest tenant 1'
+        'Register tempest project 1'
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant1',
-        tenant_description: 'Tempest tenant 1'
+        tenant_name: 'tempest_project1',
+        tenant_description: 'Tempest project 1'
       )
     end
 
@@ -37,45 +37,45 @@ describe 'openstack-integration-test::setup' do
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant1',
+        tenant_name: 'tempest_project1',
         user_name: 'tempest_user1',
         user_pass: 'tempest_user1_pass'
       )
     end
 
-    it 'creates member role to tempest_user1 for tempest_tenant1' do
+    it 'creates member role to tempest_user1 for tempest_project1' do
       expect(chef_run).to create_role_openstack_identity_register(
         'Create tempest role 1'
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant1',
+        tenant_name: 'tempest_project1',
         user_name: 'tempest_user1',
         user_pass: 'tempest_user1_pass',
         role_name: 'Member'
       )
     end
 
-    it 'grants member role to tempest_user1 for tempest_tenant1' do
+    it 'grants member role to tempest_user1 for tempest_project1' do
       expect(chef_run).to grant_role_openstack_identity_register(
-        "Grant 'member' Role to tempest user for tempest tenant #1"
+        "Grant 'member' Role to tempest user for tempest project #1"
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant1',
+        tenant_name: 'tempest_project1',
         user_name: 'tempest_user1',
         role_name: 'Member'
       )
     end
 
-    it 'registers tenant tempest_tenant2' do
+    it 'registers project tempest_project2' do
       expect(chef_run).to create_tenant_openstack_identity_register(
-        'Register tempest tenant 2'
+        'Register tempest project 2'
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant2',
-        tenant_description: 'Tempest tenant 2'
+        tenant_name: 'tempest_project2',
+        tenant_description: 'Tempest project 2'
       )
     end
 
@@ -85,32 +85,32 @@ describe 'openstack-integration-test::setup' do
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant2',
+        tenant_name: 'tempest_project2',
         user_name: 'tempest_user2',
         user_pass: 'tempest_user2_pass'
       )
     end
 
-    it 'creates member role to tempest_user2 for tempest_tenant2' do
+    it 'creates member role to tempest_user2 for tempest_project2' do
       expect(chef_run).to create_role_openstack_identity_register(
         'Create tempest role 2'
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant2',
+        tenant_name: 'tempest_project2',
         user_name: 'tempest_user2',
         user_pass: 'tempest_user2_pass',
         role_name: 'Member'
       )
     end
 
-    it 'grants member role to tempest_user2 for tempest_tenant2' do
+    it 'grants member role to tempest_user2 for tempest_project2' do
       expect(chef_run).to grant_role_openstack_identity_register(
-        "Grant 'member' Role to tempest user for tempest tenant #2"
+        "Grant 'member' Role to tempest user for tempest project #2"
       ).with(
         auth_uri: 'http://127.0.0.1:35357/v2.0',
         bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_tenant2',
+        tenant_name: 'tempest_project2',
         user_name: 'tempest_user2',
         role_name: 'Member'
       )
@@ -133,7 +133,7 @@ describe 'openstack-integration-test::setup' do
         identity_tenant: 'admin',
         identity_uri: 'http://127.0.0.1:35357/v2.0',
         image_name: 'cirros',
-        image_url: 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
     end
 
@@ -144,7 +144,7 @@ describe 'openstack-integration-test::setup' do
         identity_tenant: 'admin',
         identity_uri: 'http://127.0.0.1:35357/v2.0',
         image_name: 'cirros',
-        image_url: 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
     end
 

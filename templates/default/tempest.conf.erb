@@ -1,3 +1,10 @@
+[auth]
+use_dynamic_credentials = <%= @tempest_use_dynamic_credentials %>
+
+admin_username = <%= @tempest_admin %>
+admin_password = <%= @tempest_admin_pass %>
+admin_project_name = <%= @tempest_admin_project %>
+
 [identity]
 
 catalog_type = identity
@@ -13,24 +20,17 @@ region = RegionOne
 
 username = <%= @tempest_user1 %>
 password = <%= @tempest_user1_pass %>
-tenant_name = <%= @tempest_user1_tenant %>
+project_name = <%= @tempest_user1_project %>
 
 alt_username = <%= @tempest_user2 %>
 alt_password = <%= @tempest_user2_pass %>
-alt_tenant_name = <%= @tempest_user2_tenant %>
+alt_project_name = <%= @tempest_user2_project %>
 
-admin_username = <%= @tempest_admin %>
-admin_password = <%= @tempest_admin_pass %>
-admin_tenant_name = <%= @tempest_admin_tenant %>
-
-[compute]
+[validation]
 image_alt_ssh_user = <%= @tempest_alt_ssh_user %>
 image_ssh_user = <%= @tempest_ssh_user %>
 
-allow_tenant_isolation = <%= @tempest_tenant_isolation %>
-
-allow_tenant_reuse = <%= @tempest_tenant_reuse %>
-
+[compute]
 image_ref = <%= node['openstack']['integration-test']['image1']['id'] %>
 image_ref_alt = <%= node['openstack']['integration-test']['image2']['id'] %>
 flavor_ref = <%= @tempest_img_flavor1 %>
@@ -85,11 +85,6 @@ path_to_private_key =
 
 db_uri =
 
-[compute-admin]
-username = <%= @tempest_admin %>
-password = <%= @tempest_admin_pass %>
-tenant_name = <%= @tempest_admin_tenant %>
-
 [compute-feature-enabled]
 api_v3 = false
 
@@ -103,11 +98,11 @@ api_version = 1
 api_version = 2.0
 catalog_type = network
 
-tenant_network_cidr = 10.100.0.0/16
+project_network_cidr = 10.100.0.0/16
 
-tenant_network_mask_bits = 28
+project_network_mask_bits = 28
 
-tenant_networks_reachable = false
+project_networks_reachable = false
 
 public_network_id =
 
