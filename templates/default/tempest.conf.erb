@@ -36,6 +36,8 @@ image_ref_alt = <%= node['openstack']['integration-test']['image2']['id'] %>
 flavor_ref = <%= @tempest_img_flavor1 %>
 flavor_ref_alt = <%= @tempest_img_flavor2 %>
 
+fixed_network_name = <%= @tempest_fixed_network %>
+
 build_interval = 3
 
 build_timeout = 400
@@ -119,6 +121,10 @@ catalog_type = volume
 build_interval = 3
 build_timeout = 400
 backup = false
+
+[volume-feature-enabled]
+
+snapshot = false
 
 [object-storage]
 

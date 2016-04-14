@@ -182,6 +182,10 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to_not run_ruby_block("Get and set image2's ID")
     end
 
+    it 'runs ruby_block for nano flavor' do
+      expect(chef_run).to run_ruby_block('Create nano flavor 99')
+    end
+
     describe 'tempest.conf' do
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 

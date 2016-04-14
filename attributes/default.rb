@@ -25,6 +25,7 @@ default['openstack']['integration-test'] = {
   'tenant_reuse' => true,
   'alt_ssh_user' => 'cirros',
   'ssh_user' => 'cirros',
+  'fixed_network' => 'local_net',
   'user1' => {
     'user_name' => 'tempest_user1',
     'password' => 'tempest_user1_pass',
@@ -38,13 +39,13 @@ default['openstack']['integration-test'] = {
   'image1' => {
     'name' => 'cirros',
     'id' => nil,
-    'flavor' => 1,
+    'flavor' => 99,
     'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
   },
   'image2' => {
     'name' => 'cirros',
     'id' => nil,
-    'flavor' => 1,
+    'flavor' => 99,
     'source' => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img'
   }
 }
@@ -53,9 +54,9 @@ default['openstack']['integration-test'] = {
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w(git python-virtualenv libxslt-devel
+    'tempest_packages' => %w(git libxslt-devel
                              libxml2-devel python-testrepository
-                             libffi-devel),
+                             libffi-devel python-setuptools),
     'package_overrides' => ''
   }
 when 'debian'

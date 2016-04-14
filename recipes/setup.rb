@@ -96,11 +96,11 @@ git '/opt/tempest' do
   action :sync
 end
 
+admin_user = node['openstack']['identity']['admin_user']
+admin_tenant = node['openstack']['identity']['admin_tenant_name']
+
 %w(image1 image2).each do |img|
   image_name = node['openstack']['integration-test'][img]['name']
-  admin_user = node['openstack']['identity']['admin_user']
-  admin_tenant = node['openstack']['identity']['admin_tenant_name']
-
   openstack_image_image img do
     identity_user admin_user
     identity_pass admin_pass
@@ -123,6 +123,22 @@ end
       end
     end
     not_if { node['openstack']['integration-test'][img]['id'] }
+  end
+end
+
+# NOTE: This has to be done in a ruby_block so it gets executed at execution
+#       time and not compile time (when nova does not yet exist).
+ruby_block 'Create nano flavor 99' do
+  block do
+    begin
+      env = openstack_command_env(admin_user, admin_tenant)
+      output = openstack_command('nova', 'flavor-list', env)
+      unless output.include? 'm1.nano'
+        openstack_command('nova', 'flavor-create m1.nano 99 64 0 1', env)
+      end
+    rescue RuntimeError => e
+      Chef::Log.error("Could not create flavor m1.nano. Error was #{e.message}")
+    end
   end
 end
 
@@ -153,6 +169,7 @@ template '/opt/tempest/etc/tempest.conf' do
     'tempest_ssh_user' => node['openstack']['integration-test']['ssh_user'],
     'tempest_user2' => node['openstack']['integration-test']['user2']['user_name'],
     'tempest_user2_pass' => node['openstack']['integration-test']['user2']['password'],
-    'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['tenant_name']
+    'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['tenant_name'],
+    'tempest_fixed_network' => node['openstack']['integration-test']['fixed_network']
   )
 end
