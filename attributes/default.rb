@@ -26,6 +26,7 @@ default['openstack']['integration-test'] = {
   'alt_ssh_user' => 'cirros',
   'ssh_user' => 'cirros',
   'fixed_network' => 'local_net',
+  'heat_stack_user_role' => 'heat_stack_owner',
   'user1' => {
     'user_name' => 'tempest_user1',
     'password' => 'tempest_user1_pass',

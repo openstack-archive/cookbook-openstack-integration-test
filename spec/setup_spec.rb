@@ -116,6 +116,16 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
+    it 'creats heat stack owner role' do
+      expect(chef_run).to create_role_openstack_identity_register(
+        "Create 'heat_stack_owner' Role for template defined users"
+      ).with(
+        auth_uri: 'http://127.0.0.1:35357/v2.0',
+        bootstrap_token: 'bootstrap-token',
+        role_name: 'heat_stack_owner'
+      )
+    end
+
     it 'syncs /opt/tempest from github' do
       expect(chef_run).to sync_git(
         '/opt/tempest'

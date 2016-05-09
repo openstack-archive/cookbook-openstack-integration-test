@@ -89,6 +89,15 @@ admin_pass              = get_password 'user', node['openstack']['identity']['ad
   end
 end
 
+# Create role for heat template defined users
+heat_stack_user_role = node['openstack']['integration-test']['heat_stack_user_role']
+openstack_identity_register "Create '#{heat_stack_user_role}' Role for template defined users" do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  role_name heat_stack_user_role
+  action :create_role
+end
+
 git '/opt/tempest' do
   repository 'https://github.com/openstack/tempest'
   reference 'master'
