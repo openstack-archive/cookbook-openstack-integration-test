@@ -6,18 +6,19 @@ This cookbook installs the OpenStack Integration Test Suite **Tempest** as part 
 Requirements
 ============
 
-Chef 11 or higher required (for Chef environment use).
+- Chef 12 or higher
+- chefdk 0.9.0 or higher for testing
 
 Cookbooks
 ---------
 
 The following cookbooks are dependencies:
 
-* openstack-common
-* openstack-identity
-* openstack-image
-* openstack-compute
-* openstack-block-storage
+* 'openstack-common', '>= 14.0.0'
+* 'openstack-identity', '>= 14.0.0'
+* 'openstack-image', '>= 14.0.0'
+* 'openstack-compute', '>= 14.0.0'
+* 'openstack-block-storage', '>= 14.0.0'
 
 Usage
 =====
