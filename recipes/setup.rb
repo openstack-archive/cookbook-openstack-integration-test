@@ -38,64 +38,64 @@ end
 package 'curl'
 
 identity_admin_endpoint = admin_endpoint 'identity'
-# Since this is testing things from the user's perspective,
-# use the public identity endpoint
-identity_api_endpoint   = public_endpoint 'identity'
-bootstrap_token         = get_password 'token', 'openstack_identity_bootstrap_token'
-auth_uri                = ::URI.decode identity_admin_endpoint.to_s
-admin_pass              = get_password 'user', node['openstack']['identity']['admin_user']
+identity_public_endpoint = public_endpoint 'identity'
+auth_url = ::URI.decode identity_admin_endpoint.to_s
 
-%w(user1 user2).each_with_index do |user, i|
-  i += 1
+admin_user = node['openstack']['identity']['admin_user']
+admin_pass = get_password 'user', admin_user
+admin_project = node['openstack']['identity']['admin_project']
+admin_domain = node['openstack']['identity']['admin_domain_name']
+admin_project_domain_name = node['openstack']['identity']['admin_project_domain']
 
-  openstack_identity_register "Register tempest project #{i}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['project_name']
-    tenant_description "Tempest project #{i}"
+connection_params = {
+  openstack_auth_url:     "#{auth_url}/auth/tokens",
+  openstack_username:     admin_user,
+  openstack_api_key:      admin_pass,
+  openstack_project_name: admin_project,
+  openstack_domain_name:    admin_domain
+}
 
-    action :create_tenant
+%w(user1 user2).each_with_index do |user|
+  service_user = node['openstack']['integration-test'][user]['user_name']
+  service_project = node['openstack']['integration-test'][user]['project_name']
+  service_role = node['openstack']['integration-test'][user]['role']
+  service_domain = node['openstack']['integration-test'][user]['domain_name']
+  service_pass = node['openstack']['integration-test'][user]['password']
+
+  openstack_project service_project do
+    connection_params connection_params
   end
 
-  openstack_identity_register "Register tempest user #{i}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['project_name']
-    user_name node['openstack']['integration-test'][user]['user_name']
-    user_pass node['openstack']['integration-test'][user]['password']
-
-    action :create_user
+  openstack_role service_role do
+    connection_params connection_params
   end
 
-  openstack_identity_register "Create tempest role #{i}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['project_name']
-    user_name node['openstack']['integration-test'][user]['user_name']
-    user_pass node['openstack']['integration-test'][user]['password']
-    role_name 'Member'
-
-    action :create_role
+  openstack_user service_user do
+    project_name service_project
+    role_name service_role
+    password service_pass
+    connection_params connection_params
   end
 
-  openstack_identity_register "Grant 'member' Role to tempest user for tempest project ##{i}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name node['openstack']['integration-test'][user]['project_name']
-    user_name node['openstack']['integration-test'][user]['user_name']
-    role_name 'Member'
-
+  openstack_user service_user do
+    role_name service_role
+    project_name service_project
+    connection_params connection_params
     action :grant_role
+  end
+
+  openstack_user service_user do
+    domain_name service_domain
+    role_name service_role
+    user_name service_user
+    connection_params connection_params
+    action :grant_domain
   end
 end
 
-# Create role for heat template defined users
 heat_stack_user_role = node['openstack']['integration-test']['heat_stack_user_role']
-openstack_identity_register "Create '#{heat_stack_user_role}' Role for template defined users" do
-  auth_uri auth_uri
-  bootstrap_token bootstrap_token
-  role_name heat_stack_user_role
-  action :create_role
+openstack_role heat_stack_user_role do
+  connection_params connection_params
 end
 
 git '/opt/tempest' do
@@ -105,16 +105,15 @@ git '/opt/tempest' do
   action :sync
 end
 
-admin_user = node['openstack']['identity']['admin_user']
-admin_project = node['openstack']['identity']['admin_tenant_name']
-
 %w(image1 image2).each do |img|
   image_name = node['openstack']['integration-test'][img]['name']
   openstack_image_image img do
     identity_user admin_user
     identity_pass admin_pass
     identity_tenant admin_project
-    identity_uri auth_uri
+    identity_uri auth_url
+    identity_user_domain_name admin_domain
+    identity_project_domain_name admin_project_domain_name
     image_name image_name
     image_url node['openstack']['integration-test'][img]['source']
   end
@@ -162,8 +161,8 @@ template '/opt/tempest/etc/tempest.conf' do
   #       get_image_id being executed).
   variables(
     'tempest_disable_ssl_validation' => node['openstack']['integration-test']['disable_ssl_validation'],
-    'identity_endpoint_host' => identity_api_endpoint.host,
-    'identity_endpoint_port' => identity_api_endpoint.port,
+    'identity_endpoint_host' => identity_public_endpoint.host,
+    'identity_endpoint_port' => identity_public_endpoint.port,
     'tempest_use_dynamic_credentials' => node['openstack']['integration-test']['use_dynamic_credentials'],
     'tempest_user1' => node['openstack']['integration-test']['user1']['user_name'],
     'tempest_user1_pass' => node['openstack']['integration-test']['user1']['password'],

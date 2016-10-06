@@ -29,12 +29,16 @@ default['openstack']['integration-test'] = {
   'user1' => {
     'user_name' => 'tempest_user1',
     'password' => 'tempest_user1_pass',
-    'project_name' => 'tempest_project1'
+    'project_name' => 'tempest_project1',
+    'role' => 'Member',
+    'domain_name' => 'Default'
   },
   'user2' => {
     'user_name' => 'tempest_user2',
     'password' => 'tempest_user2_pass',
-    'project_name' => 'tempest_project2'
+    'project_name' => 'tempest_project2',
+    'role' => 'Member',
+    'domain_name' => 'Default'
   },
   'image1' => {
     'name' => 'cirros',
