@@ -14,3 +14,5 @@ cookbook "openstack-network",
   github: "openstack/cookbook-openstack-network"
 cookbook "openstack-block-storage",
   github: "openstack/cookbook-openstack-block-storage"
+cookbook "openstackclient",
+  github: "cloudbau/cookbook-openstackclient"

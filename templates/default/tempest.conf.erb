@@ -1,9 +1,11 @@
 [auth]
 use_dynamic_credentials = <%= @tempest_use_dynamic_credentials %>
 
+default_credentials_domain_name = Default
 admin_username = <%= @tempest_admin %>
 admin_password = <%= @tempest_admin_pass %>
 admin_project_name = <%= @tempest_admin_project %>
+admin_domain_name = Default
 
 [identity]
 
@@ -13,6 +15,7 @@ disable_ssl_certificate_validation = <%= @tempest_disable_ssl_validation %>
 
 uri = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v2.0/
 uri_v3 = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v3/
+v3_endpoint_type = publicURL
 
 strategy = keystone
 
@@ -20,11 +23,15 @@ region = RegionOne
 
 username = <%= @tempest_user1 %>
 password = <%= @tempest_user1_pass %>
+user_domain_name = Default
+project_domain_name = Default
 project_name = <%= @tempest_user1_project %>
 
 alt_username = <%= @tempest_user2 %>
 alt_password = <%= @tempest_user2_pass %>
 alt_project_name = <%= @tempest_user2_project %>
+default_domain_id = default
+admin_domain_scope = false
 
 [validation]
 image_alt_ssh_user = <%= @tempest_alt_ssh_user %>
@@ -69,7 +76,8 @@ use_block_migration_for_live_migration = False
 disk_config_enabled_override = true
 
 [identity-feature-enabled]
-api_v3 = false
+api_v3 = true
+api_v2 = false
 
 [whitebox]
 

@@ -24,8 +24,8 @@ shared_context 'tempest-stubs' do
       {
         'OS_USERNAME'    => 'admin',
         'OS_PASSWORD'    => 'admin',
-        'OS_TENANT_NAME' => 'admin',
-        'OS_AUTH_URL'    => 'http://127.0.0.1:35357/v2.0'
+        'OS_PROJECT_NAME' => 'admin',
+        'OS_AUTH_URL' => 'http://127.0.0.1:35357/v3'
       }
 
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)

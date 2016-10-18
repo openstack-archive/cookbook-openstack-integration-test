@@ -11,6 +11,14 @@ describe 'openstack-integration-test::setup' do
 
     include_context 'tempest-stubs'
 
+    connection_params = {
+      openstack_auth_url: 'http://127.0.0.1:35357/v3/auth/tokens',
+      openstack_username: 'admin',
+      openstack_api_key: 'admin',
+      openstack_project_name: 'admin',
+      openstack_domain_name: 'default'
+    }
+
     it 'installs tempest dependencies' do
       packages = %w(git libxml2-dev libxslt-dev testrepository python-dev
                     libffi-dev)
@@ -20,109 +28,99 @@ describe 'openstack-integration-test::setup' do
       end
     end
 
-    it 'registers project tempest_project1' do
-      expect(chef_run).to create_tenant_openstack_identity_register(
-        'Register tempest project 1'
+    it 'registers tempest_project1 Project' do
+      expect(chef_run).to create_openstack_project(
+        'tempest_project1'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project1',
-        tenant_description: 'Tempest project 1'
+        connection_params: connection_params
       )
     end
 
-    it 'registers user tempest_user1' do
-      expect(chef_run).to create_user_openstack_identity_register(
-        'Register tempest user 1'
+    it 'registers service user' do
+      expect(chef_run).to create_openstack_user(
+        'tempest_user1'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project1',
-        user_name: 'tempest_user1',
-        user_pass: 'tempest_user1_pass'
+        project_name: 'tempest_project1',
+        role_name: 'Member',
+        password: 'tempest_user1_pass',
+        connection_params: connection_params
       )
     end
 
-    it 'creates member role to tempest_user1 for tempest_project1' do
-      expect(chef_run).to create_role_openstack_identity_register(
-        'Create tempest role 1'
+    it 'create service role' do
+      expect(chef_run).to create_openstack_role(
+        'Member'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project1',
-        user_name: 'tempest_user1',
-        user_pass: 'tempest_user1_pass',
-        role_name: 'Member'
+        connection_params: connection_params
       )
     end
 
-    it 'grants member role to tempest_user1 for tempest_project1' do
-      expect(chef_run).to grant_role_openstack_identity_register(
-        "Grant 'member' Role to tempest user for tempest project #1"
+    it do
+      expect(chef_run).to grant_domain_openstack_user(
+        'tempest_user1'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project1',
-        user_name: 'tempest_user1',
-        role_name: 'Member'
+        domain_name: 'Default',
+        role_name: 'Member',
+        connection_params: connection_params
       )
     end
 
-    it 'registers project tempest_project2' do
-      expect(chef_run).to create_tenant_openstack_identity_register(
-        'Register tempest project 2'
+    it do
+      expect(chef_run).to grant_role_openstack_user(
+        'tempest_user1'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project2',
-        tenant_description: 'Tempest project 2'
+        project_name: 'tempest_project1',
+        role_name: 'Member',
+        password: 'tempest_user1_pass',
+        connection_params: connection_params
       )
     end
 
-    it 'registers user tempest_user2' do
-      expect(chef_run).to create_user_openstack_identity_register(
-        'Register tempest user 2'
+    it 'registers tempest_project2 Project' do
+      expect(chef_run).to create_openstack_project(
+        'tempest_project2'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project2',
-        user_name: 'tempest_user2',
-        user_pass: 'tempest_user2_pass'
+        connection_params: connection_params
       )
     end
 
-    it 'creates member role to tempest_user2 for tempest_project2' do
-      expect(chef_run).to create_role_openstack_identity_register(
-        'Create tempest role 2'
+    it 'registers service user' do
+      expect(chef_run).to create_openstack_user(
+        'tempest_user2'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project2',
-        user_name: 'tempest_user2',
-        user_pass: 'tempest_user2_pass',
-        role_name: 'Member'
+        project_name: 'tempest_project2',
+        role_name: 'Member',
+        password: 'tempest_user2_pass',
+        connection_params: connection_params
       )
     end
 
-    it 'grants member role to tempest_user2 for tempest_project2' do
-      expect(chef_run).to grant_role_openstack_identity_register(
-        "Grant 'member' Role to tempest user for tempest project #2"
+    it do
+      expect(chef_run).to grant_domain_openstack_user(
+        'tempest_user2'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        tenant_name: 'tempest_project2',
-        user_name: 'tempest_user2',
-        role_name: 'Member'
+        domain_name: 'Default',
+        role_name: 'Member',
+        connection_params: connection_params
       )
     end
 
-    it 'creats heat stack owner role' do
-      expect(chef_run).to create_role_openstack_identity_register(
-        "Create 'heat_stack_owner' Role for template defined users"
+    it do
+      expect(chef_run).to grant_role_openstack_user(
+        'tempest_user2'
       ).with(
-        auth_uri: 'http://127.0.0.1:35357/v2.0',
-        bootstrap_token: 'bootstrap-token',
-        role_name: 'heat_stack_owner'
+        project_name: 'tempest_project2',
+        role_name: 'Member',
+        password: 'tempest_user2_pass',
+        connection_params: connection_params
+      )
+    end
+
+    it 'create service role' do
+      expect(chef_run).to create_openstack_role(
+        'heat_stack_owner'
+      ).with(
+        connection_params: connection_params
       )
     end
 
@@ -141,7 +139,9 @@ describe 'openstack-integration-test::setup' do
         identity_user: 'admin',
         identity_pass: 'admin',
         identity_tenant: 'admin',
-        identity_uri: 'http://127.0.0.1:35357/v2.0',
+        identity_uri: 'http://127.0.0.1:35357/v3',
+        identity_user_domain_name: 'default',
+        identity_project_domain_name: 'default',
         image_name: 'cirros',
         image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
@@ -152,7 +152,9 @@ describe 'openstack-integration-test::setup' do
         identity_user: 'admin',
         identity_pass: 'admin',
         identity_tenant: 'admin',
-        identity_uri: 'http://127.0.0.1:35357/v2.0',
+        identity_uri: 'http://127.0.0.1:35357/v3',
+        identity_user_domain_name: 'default',
+        identity_project_domain_name: 'default',
         image_name: 'cirros',
         image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
