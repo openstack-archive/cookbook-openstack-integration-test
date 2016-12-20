@@ -163,6 +163,7 @@ template '/opt/tempest/etc/tempest.conf' do
     'tempest_disable_ssl_validation' => node['openstack']['integration-test']['disable_ssl_validation'],
     'identity_endpoint_host' => identity_public_endpoint.host,
     'identity_endpoint_port' => identity_public_endpoint.port,
+    'identity_endpoint_scheme' => identity_public_endpoint.scheme,
     'tempest_use_dynamic_credentials' => node['openstack']['integration-test']['use_dynamic_credentials'],
     'tempest_user1' => node['openstack']['integration-test']['user1']['user_name'],
     'tempest_user1_pass' => node['openstack']['integration-test']['user1']['password'],

@@ -198,7 +198,7 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to run_ruby_block('Create nano flavor 99')
     end
 
-    describe 'tempest.conf' do
+    describe 'tempest.conf default' do
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 
       it 'creates tempest.conf' do
@@ -222,6 +222,39 @@ describe 'openstack-integration-test::setup' do
         chef_run.find_resource(:ruby_block, "Get and set image2's ID").old_run_action(:create)
         expect(chef_run).to render_file(file.name).with_content(
           'image_ref_alt = 5d1ff378-e9c1-4db7-97c1-d35f07824595'
+        )
+      end
+
+      it 'has a v2 auth URI with the default scheme' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'uri = http://127.0.0.1:5000/v2.0'
+        )
+      end
+
+      it 'has a v3 auth URI with the default scheme' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'uri_v3 = http://127.0.0.1:5000/v3'
+        )
+      end
+    end
+
+    describe 'tempest.conf with HTTPS' do
+      let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
+      let(:chef_run) do
+        runner.node.normal['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
+        runner.converge(described_recipe)
+      end
+      let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
+
+      it 'has a v2 auth URI with the secure scheme' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'uri = https://127.0.0.1:5000/v2.0'
+        )
+      end
+
+      it 'has a v3 auth URI with the secure scheme' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'uri_v3 = https://127.0.0.1:5000/v3'
         )
       end
     end

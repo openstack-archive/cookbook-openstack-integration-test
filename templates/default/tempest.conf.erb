@@ -13,8 +13,8 @@ catalog_type = identity
 
 disable_ssl_certificate_validation = <%= @tempest_disable_ssl_validation %>
 
-uri = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v2.0/
-uri_v3 = http://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v3/
+uri = <%= @identity_endpoint_scheme %>://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v2.0/
+uri_v3 = <%= @identity_endpoint_scheme %>://<%= @identity_endpoint_host %>:<%= @identity_endpoint_port %>/v3/
 v3_endpoint_type = publicURL
 
 strategy = keystone
