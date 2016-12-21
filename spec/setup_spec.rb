@@ -142,7 +142,8 @@ describe 'openstack-integration-test::setup' do
         identity_uri: 'http://127.0.0.1:35357/v3',
         identity_user_domain_name: 'default',
         identity_project_domain_name: 'default',
-        image_name: 'cirros',
+        image_name: 'cirros-test1',
+        image_id: '1ac790f6-903a-4833-979f-a38f1819e3b1',
         image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
     end
@@ -155,47 +156,10 @@ describe 'openstack-integration-test::setup' do
         identity_uri: 'http://127.0.0.1:35357/v3',
         identity_user_domain_name: 'default',
         identity_project_domain_name: 'default',
-        image_name: 'cirros',
+        image_name: 'cirros-test2',
+        image_id: 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
         image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
       )
-    end
-
-    it 'runs ruby_block for image1' do
-      expect(chef_run).to run_ruby_block("Get and set image1's ID")
-    end
-
-    it 'runs ruby_block for image2' do
-      expect(chef_run).to run_ruby_block("Get and set image2's ID")
-    end
-
-    it 'sets attribute when ruby_block is run for for image1' do
-      # run actual ruby_block resource
-      chef_run.find_resource(:ruby_block, "Get and set image1's ID").old_run_action(:create)
-      image_id = chef_run.node['openstack']['integration-test']['image1']['id']
-      expect(image_id).to eq('5d1ff378-e9c1-4db7-97c1-d35f07824595')
-    end
-
-    it 'sets attribute when ruby_block is run for for image2' do
-      # run actual ruby_block resource
-      chef_run.find_resource(:ruby_block, "Get and set image2's ID").old_run_action(:create)
-      image_id = chef_run.node['openstack']['integration-test']['image2']['id']
-      expect(image_id).to eq('5d1ff378-e9c1-4db7-97c1-d35f07824595')
-    end
-
-    it 'does not run ruby_block for image1 when id already set' do
-      image_id = '5F7D0C44-F60E-404C-A28A-62140ADF1412'
-      node.set['openstack']['integration-test']['image1']['id'] = image_id
-      expect(chef_run).to_not run_ruby_block("Get and set image1's ID")
-    end
-
-    it 'does not run ruby_block for image2 when id already set' do
-      image_id = '5F7D0C44-F60E-404C-A28A-62140ADF1413'
-      node.set['openstack']['integration-test']['image2']['id'] = image_id
-      expect(chef_run).to_not run_ruby_block("Get and set image2's ID")
-    end
-
-    it 'runs ruby_block for nano flavor' do
-      expect(chef_run).to run_ruby_block('Create nano flavor 99')
     end
 
     describe 'tempest.conf default' do
@@ -210,18 +174,14 @@ describe 'openstack-integration-test::setup' do
       end
 
       it 'has a populated entry for image_ref' do
-        # run actual ruby_block resource
-        chef_run.find_resource(:ruby_block, "Get and set image1's ID").old_run_action(:create)
         expect(chef_run).to render_file(file.name).with_content(
-          'image_ref = 5d1ff378-e9c1-4db7-97c1-d35f07824595'
+          'image_ref = 1ac790f6-903a-4833-979f-a38f1819e3b1'
         )
       end
 
       it 'has a populated entry for image_ref_alt' do
-        # run actual ruby_block resource
-        chef_run.find_resource(:ruby_block, "Get and set image2's ID").old_run_action(:create)
         expect(chef_run).to render_file(file.name).with_content(
-          'image_ref_alt = 5d1ff378-e9c1-4db7-97c1-d35f07824595'
+          'image_ref_alt = f7c2ac6d-0011-499f-a9ec-ca71348bf2e4'
         )
       end
 

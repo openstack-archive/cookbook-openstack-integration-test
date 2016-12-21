@@ -25,6 +25,9 @@ class Chef::Resource::RubyBlock # rubocop:disable Documentation
   include ::Openstack
 end
 
+package 'python-dev'
+python_runtime '2'
+
 platform_options = node['openstack']['integration-test']['platform']
 
 platform_options['tempest_packages'].each do |pkg|
@@ -98,15 +101,34 @@ openstack_role heat_stack_user_role do
   connection_params connection_params
 end
 
-git '/opt/tempest' do
+venv_path = '/opt/tempest'
+
+python_execute 'install tempest' do
+  action :nothing
+  command '-m pip install .'
+  cwd venv_path
+end
+
+git venv_path do
   repository 'https://github.com/openstack/tempest'
   reference 'master'
   depth 1
   action :sync
+  notifies :run, 'python_execute[install tempest]', :immediately
+end
+
+python_virtualenv venv_path
+
+platform_options['python_packages'].each do |pkg|
+  python_package pkg do
+    virtualenv venv_path
+    action :upgrade
+  end
 end
 
 %w(image1 image2).each do |img|
   image_name = node['openstack']['integration-test'][img]['name']
+  image_id = node['openstack']['integration-test'][img]['id']
   openstack_image_image img do
     identity_user admin_user
     identity_pass admin_pass
@@ -115,22 +137,8 @@ end
     identity_user_domain_name admin_domain
     identity_project_domain_name admin_project_domain_name
     image_name image_name
+    image_id image_id
     image_url node['openstack']['integration-test'][img]['source']
-  end
-
-  # NOTE: This has to be done in a ruby_block so it gets executed at execution
-  #       time and not compile time (when glance does not yet exist).
-  ruby_block "Get and set #{img}'s ID" do
-    block do
-      begin
-        env = openstack_command_env admin_user, admin_project
-        id = image_id image_name, env
-        node.set['openstack']['integration-test'][img]['id'] = id
-      rescue RuntimeError => e
-        Chef::Log.error("UUID not found for Glance image #{image_name}. Error was #{e.message}")
-      end
-    end
-    not_if { node['openstack']['integration-test'][img]['id'] }
   end
 end
 
@@ -139,7 +147,7 @@ end
 ruby_block 'Create nano flavor 99' do
   block do
     begin
-      env = openstack_command_env(admin_user, admin_project)
+      env = openstack_command_env(admin_user, admin_project, 'Default', 'Default')
       output = openstack_command('nova', 'flavor-list', env)
       unless output.include? 'm1.nano'
         openstack_command('nova', 'flavor-create m1.nano 99 64 0 1', env)
@@ -150,34 +158,38 @@ ruby_block 'Create nano flavor 99' do
   end
 end
 
+node.default['openstack']['integration-test']['conf'].tap do |conf|
+  conf['compute']['image_ref'] = node['openstack']['integration-test']['image1']['id']
+  conf['compute']['image_ref_alt'] = node['openstack']['integration-test']['image2']['id']
+  conf['identity']['uri'] = "#{identity_public_endpoint.scheme}://#{identity_public_endpoint.host}:#{identity_public_endpoint.port}/v2.0/"
+  conf['identity']['uri_v3'] = "#{identity_public_endpoint.scheme}://#{identity_public_endpoint.host}:#{identity_public_endpoint.port}/v3/"
+end
+
+node.default['openstack']['integration-test']['conf_secrets'].tap do |conf_secrets|
+  conf_secrets['auth']['admin_username'] = admin_user
+  conf_secrets['auth']['admin_password'] = admin_pass
+  conf_secrets['auth']['admin_project_name'] = admin_project
+end
+
+# merge all config options and secrets to be used in the nova.conf.erb
+integration_test_conf_options = merge_config_options 'integration-test'
+
+# create the keystone.conf from attributes
 template '/opt/tempest/etc/tempest.conf' do
-  source 'tempest.conf.erb'
+  source 'openstack-service.conf.erb'
+  cookbook 'openstack-common'
   owner 'root'
   group 'root'
   mode 00600
-  # NOTE: We do not pass the image1/image2 node attributes above to the
-  #       template but embed directly in the template itself instead to work
-  #       around the variables being evaluated at compile time (prior to
-  #       get_image_id being executed).
   variables(
-    'tempest_disable_ssl_validation' => node['openstack']['integration-test']['disable_ssl_validation'],
-    'identity_endpoint_host' => identity_public_endpoint.host,
-    'identity_endpoint_port' => identity_public_endpoint.port,
-    'identity_endpoint_scheme' => identity_public_endpoint.scheme,
-    'tempest_use_dynamic_credentials' => node['openstack']['integration-test']['use_dynamic_credentials'],
-    'tempest_user1' => node['openstack']['integration-test']['user1']['user_name'],
-    'tempest_user1_pass' => node['openstack']['integration-test']['user1']['password'],
-    'tempest_user1_project' => node['openstack']['integration-test']['user1']['project_name'],
-    'tempest_img_flavor1' => node['openstack']['integration-test']['image1']['flavor'],
-    'tempest_img_flavor2' => node['openstack']['integration-test']['image2']['flavor'],
-    'tempest_admin' => node['openstack']['identity']['admin_user'],
-    'tempest_admin_project' => admin_project,
-    'tempest_admin_pass' => admin_pass,
-    'tempest_alt_ssh_user' => node['openstack']['integration-test']['alt_ssh_user'],
-    'tempest_ssh_user' => node['openstack']['integration-test']['ssh_user'],
-    'tempest_user2' => node['openstack']['integration-test']['user2']['user_name'],
-    'tempest_user2_pass' => node['openstack']['integration-test']['user2']['password'],
-    'tempest_user2_tenant' => node['openstack']['integration-test']['user2']['project_name'],
-    'tempest_fixed_network' => node['openstack']['integration-test']['fixed_network']
+    service_config: integration_test_conf_options
   )
+end
+
+# delete all secrets saved in the attribute
+# node['openstack']['identity']['conf_secrets'] after creating the keystone.conf
+ruby_block "delete all attributes in node['openstack']['integration-test']['conf_secrets']" do
+  block do
+    node.rm(:openstack, :'integration-test', :conf_secrets)
+  end
 end

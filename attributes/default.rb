@@ -41,14 +41,14 @@ default['openstack']['integration-test'] = {
     'domain_name' => 'Default'
   },
   'image1' => {
-    'name' => 'cirros',
-    'id' => nil,
+    'name' => 'cirros-test1',
+    'id' => '1ac790f6-903a-4833-979f-a38f1819e3b1',
     'flavor' => 99,
     'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
   },
   'image2' => {
-    'name' => 'cirros',
-    'id' => nil,
+    'name' => 'cirros-test2',
+    'id' => 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
     'flavor' => 99,
     'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
   }
@@ -58,15 +58,18 @@ default['openstack']['integration-test'] = {
 case platform_family
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w(git libxslt-devel
-                             libxml2-devel python-testrepository
-                             libffi-devel python-setuptools),
-    'package_overrides' => ''
+    tempest_packages: %w(git libxslt-devel
+                         libxml2-devel python-testrepository
+                         libffi-devel python-setuptools),
+    package_overrides: '',
+    python_packages: []
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w(git libxml2-dev libxslt-dev testrepository
-                             python-dev libffi-dev),
-    'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
+    tempest_packages: %w( git libssl-dev libffi-dev python-dev libxml2-dev
+                          libxslt1-dev libpq-dev libxml2-dev libxslt-dev
+                          testrepository python-dev libffi-dev),
+    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
+    python_packages: %w(oslotest ddt testscenarios)
   }
 end
