@@ -144,7 +144,7 @@ describe 'openstack-integration-test::setup' do
         identity_project_domain_name: 'default',
         image_name: 'cirros-test1',
         image_id: '1ac790f6-903a-4833-979f-a38f1819e3b1',
-        image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
       )
     end
 
@@ -158,7 +158,7 @@ describe 'openstack-integration-test::setup' do
         identity_project_domain_name: 'default',
         image_name: 'cirros-test2',
         image_id: 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
-        image_url: 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
       )
     end
 
