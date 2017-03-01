@@ -101,15 +101,19 @@ openstack_role heat_stack_user_role do
   connection_params connection_params
 end
 
-venv_path = '/opt/tempest'
+tempest_path = '/opt/tempest'
+venv_path = '/opt/tempest-venv'
+
+python_virtualenv venv_path
 
 python_execute 'install tempest' do
   action :nothing
   command '-m pip install .'
-  cwd venv_path
+  cwd tempest_path
+  virtualenv venv_path
 end
 
-git venv_path do
+git tempest_path do
   repository 'https://github.com/openstack/tempest'
   reference 'master'
   depth 1
@@ -117,13 +121,14 @@ git venv_path do
   notifies :run, 'python_execute[install tempest]', :immediately
 end
 
-python_virtualenv venv_path
-
-platform_options['python_packages'].each do |pkg|
-  python_package pkg do
-    virtualenv venv_path
-    action :upgrade
-  end
+template "#{venv_path}/tempest.sh" do
+  source 'tempest.sh.erb'
+  user 'root'
+  group 'root'
+  mode 0755
+  variables(
+    venv_path: venv_path
+  )
 end
 
 %w(image1 image2).each do |img|

@@ -7,7 +7,7 @@ source_url 'https://github.com/openstack/cookbook-openstack-integration-test' if
 license 'Apache 2.0'
 description 'Installs and configures the Tempest Integration Test Suite'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '14.0.0'
+version '14.1.0'
 recipe 'openstack-integration-test::setup', 'Installs and configures Tempest'
 
 %w(ubuntu redhat centos).each do |os|

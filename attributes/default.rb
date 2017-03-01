@@ -44,13 +44,13 @@ default['openstack']['integration-test'] = {
     'name' => 'cirros-test1',
     'id' => '1ac790f6-903a-4833-979f-a38f1819e3b1',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
+    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
   },
   'image2' => {
     'name' => 'cirros-test2',
     'id' => 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
+    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
   }
 }
 
@@ -61,15 +61,13 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     tempest_packages: %w(git libxslt-devel
                          libxml2-devel python-testrepository
                          libffi-devel python-setuptools),
-    package_overrides: '',
-    python_packages: []
+    package_overrides: ''
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    tempest_packages: %w( git libssl-dev libffi-dev python-dev libxml2-dev
-                          libxslt1-dev libpq-dev libxml2-dev libxslt-dev
-                          testrepository python-dev libffi-dev),
-    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
-    python_packages: %w(oslotest ddt testscenarios)
+    tempest_packages: %w(git libssl-dev libffi-dev python-dev libxml2-dev
+                         libxslt1-dev libpq-dev libxml2-dev libxslt-dev
+                         testrepository python-dev libffi-dev),
+    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end
