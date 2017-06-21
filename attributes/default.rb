@@ -60,7 +60,7 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
     tempest_packages: %w(git libxslt-devel
                          libxml2-devel python-testrepository
-                         libffi-devel python-setuptools),
+                         libffi-devel python-devel python-setuptools),
     package_overrides: ''
   }
 when 'debian'
