@@ -25,10 +25,9 @@ class Chef::Resource::RubyBlock # rubocop:disable Documentation
   include ::Openstack
 end
 
-package 'python-dev'
-python_runtime '2'
-
 platform_options = node['openstack']['integration-test']['platform']
+
+python_runtime '2'
 
 platform_options['tempest_packages'].each do |pkg|
   package pkg do
