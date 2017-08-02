@@ -169,7 +169,7 @@ describe 'openstack-integration-test::setup' do
         expect(chef_run).to create_template(file.name).with(
           user: 'root',
           group: 'root',
-          mode: 00600
+          mode: 0o0600
         )
       end
 

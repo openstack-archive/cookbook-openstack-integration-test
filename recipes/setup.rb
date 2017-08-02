@@ -124,7 +124,7 @@ template "#{venv_path}/tempest.sh" do
   source 'tempest.sh.erb'
   user 'root'
   group 'root'
-  mode 0755
+  mode 0o755
   variables(
     venv_path: venv_path
   )
@@ -184,7 +184,7 @@ template '/opt/tempest/etc/tempest.conf' do
   cookbook 'openstack-common'
   owner 'root'
   group 'root'
-  mode 00600
+  mode 0o0600
   variables(
     service_config: integration_test_conf_options
   )
