@@ -31,27 +31,27 @@ default['openstack']['integration-test'] = {
     'password' => 'tempest_user1_pass',
     'project_name' => 'tempest_project1',
     'role' => 'Member',
-    'domain_name' => 'Default'
+    'domain_name' => 'Default',
   },
   'user2' => {
     'user_name' => 'tempest_user2',
     'password' => 'tempest_user2_pass',
     'project_name' => 'tempest_project2',
     'role' => 'Member',
-    'domain_name' => 'Default'
+    'domain_name' => 'Default',
   },
   'image1' => {
     'name' => 'cirros-test1',
     'id' => '1ac790f6-903a-4833-979f-a38f1819e3b1',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
+    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img',
   },
   'image2' => {
     'name' => 'cirros-test2',
     'id' => 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
-  }
+    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img',
+  },
 }
 
 # platform-specific settings
@@ -61,13 +61,13 @@ when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
     tempest_packages: %w(git libxslt-devel
                          libxml2-devel python-testrepository
                          libffi-devel python-devel python-setuptools),
-    package_overrides: ''
+    package_overrides: '',
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
     tempest_packages: %w(git libssl-dev libffi-dev python-dev libxml2-dev
                          libxslt1-dev libpq-dev libxml2-dev libxslt-dev
                          testrepository python-dev libffi-dev),
-    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
+    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
   }
 end

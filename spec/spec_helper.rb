@@ -10,12 +10,12 @@ LOG_LEVEL = :fatal
 REDHAT_OPTS = {
   platform: 'redhat',
   version: '7.1',
-  log_level: LOG_LEVEL
+  log_level: LOG_LEVEL,
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '16.04',
-  log_level: LOG_LEVEL
+  log_level: LOG_LEVEL,
 }.freeze
 
 shared_context 'tempest-stubs' do
@@ -28,7 +28,7 @@ shared_context 'tempest-stubs' do
         'OS_AUTH_URL' => 'http://127.0.0.1:35357/v3',
         'OS_USER_DOMAIN_NAME' => 'default',
         'OS_PROJECT_DOMAIN_NAME' => 'default',
-        'OS_IDENTITY_API_VERSION' => 3
+        'OS_IDENTITY_API_VERSION' => 3,
       }
 
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)

@@ -17,11 +17,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class Chef::Recipe # rubocop:disable Documentation
+class Chef::Recipe
   include ::Openstack
 end
 
-class Chef::Resource::RubyBlock # rubocop:disable Documentation
+class Chef::Resource::RubyBlock
   include ::Openstack
 end
 
@@ -54,7 +54,7 @@ connection_params = {
   openstack_username:     admin_user,
   openstack_api_key:      admin_pass,
   openstack_project_name: admin_project,
-  openstack_domain_name:    admin_domain
+  openstack_domain_name:    admin_domain,
 }
 
 %w(user1 user2).each_with_index do |user|

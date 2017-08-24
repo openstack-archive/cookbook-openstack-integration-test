@@ -1,25 +1,20 @@
 task default: ["test"]
 
-task :test => [:lint, :style, :knife, :unit]
+task :test => [:syntax, :lint, :unit]
 
 desc "Vendor the cookbooks in the Berksfile"
 task :berks_prep do
   sh %{chef exec berks vendor}
 end
 
-desc "Run FoodCritic (lint) tests"
+desc "Run FoodCritic (syntax) tests"
+task :syntax do
+  sh %{chef exec foodcritic --exclude spec -f any .}
+end
+
+desc "Run RuboCop (lint) tests"
 task :lint do
-  sh %{chef exec foodcritic --epic-fail any --tags ~FC003 --tags ~FC023 .}
-end
-
-desc "Run knife tests"
-task :knife => :berks_prep do
-  sh %{chef exec knife cookbook test openstack-integration-test -o berks-cookbooks}
-end
-
-desc "Run RuboCop (style) tests"
-task :style do
-  sh %{chef exec rubocop}
+  sh %{chef exec cookstyle}
 end
 
 desc "Run RSpec (unit) tests"

@@ -16,7 +16,7 @@ describe 'openstack-integration-test::setup' do
       openstack_username: 'admin',
       openstack_api_key: 'admin',
       openstack_project_name: 'admin',
-      openstack_domain_name: 'default'
+      openstack_domain_name: 'default',
     }
 
     it 'installs tempest dependencies' do
