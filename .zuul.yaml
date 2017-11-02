@@ -1,0 +1,4 @@
+- project:
+    name: openstack/cookbook-openstack-integration-test
+    templates:
+      - openstack-chef-repo-jobs
