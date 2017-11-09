@@ -40,6 +40,7 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to create_openstack_user(
         'tempest_user1'
       ).with(
+        domain_name: 'Default',
         project_name: 'tempest_project1',
         password: 'tempest_user1_pass',
         connection_params: connection_params
@@ -50,16 +51,6 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to create_openstack_role(
         'Member'
       ).with(
-        connection_params: connection_params
-      )
-    end
-
-    it do
-      expect(chef_run).to grant_domain_openstack_user(
-        'tempest_user1'
-      ).with(
-        domain_name: 'Default',
-        role_name: 'Member',
         connection_params: connection_params
       )
     end
@@ -87,18 +78,9 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to create_openstack_user(
         'tempest_user2'
       ).with(
+        domain_name: 'Default',
         project_name: 'tempest_project2',
         password: 'tempest_user2_pass',
-        connection_params: connection_params
-      )
-    end
-
-    it do
-      expect(chef_run).to grant_domain_openstack_user(
-        'tempest_user2'
-      ).with(
-        domain_name: 'Default',
-        role_name: 'Member',
         connection_params: connection_params
       )
     end
