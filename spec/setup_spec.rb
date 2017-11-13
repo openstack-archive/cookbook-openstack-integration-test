@@ -41,7 +41,6 @@ describe 'openstack-integration-test::setup' do
         'tempest_user1'
       ).with(
         project_name: 'tempest_project1',
-        role_name: 'Member',
         password: 'tempest_user1_pass',
         connection_params: connection_params
       )
@@ -89,7 +88,6 @@ describe 'openstack-integration-test::setup' do
         'tempest_user2'
       ).with(
         project_name: 'tempest_project2',
-        role_name: 'Member',
         password: 'tempest_user2_pass',
         connection_params: connection_params
       )

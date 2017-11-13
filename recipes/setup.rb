@@ -74,7 +74,6 @@ connection_params = {
 
   openstack_user service_user do
     project_name service_project
-    role_name service_role
     password service_pass
     connection_params connection_params
   end
