@@ -55,19 +55,21 @@ default['openstack']['integration-test'] = {
 }
 
 # platform-specific settings
-case platform_family
+case node['platform_family']
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
     tempest_packages: %w(git libxslt-devel
                          libxml2-devel python-testrepository
-                         libffi-devel python-devel python-setuptools),
+                         libffi-devel python-devel python-setuptools
+                         openstack-tempest),
     package_overrides: '',
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    tempest_packages: %w(git libssl-dev libffi-dev python-dev libxml2-dev
-                         libxslt1-dev libpq-dev libxml2-dev libxslt-dev
-                         testrepository python-dev libffi-dev),
-    package_overrides: "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
+    'tempest_packages' => %w(git libssl-dev libffi-dev python-dev libxml2-dev
+                             libxslt1-dev libpq-dev libxml2-dev libxslt-dev
+                             testrepository python-dev libffi-dev
+                             python-gabbi tempest),
+    'package_overrides' => '',
   }
 end

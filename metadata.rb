@@ -1,7 +1,7 @@
 name             'openstack-integration-test'
 maintainer       'openstack-chef'
 maintainer_email 'openstack-dev@lists.openstack.org'
-license          'Apache 2.0'
+license          'Apache-2.0'
 description      'Installs and configures the Tempest Integration Test Suite'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '16.0.0'
@@ -19,7 +19,7 @@ depends 'openstack-compute', '>= 16.0.0'
 depends 'openstack-block-storage', '>= 16.0.0'
 depends 'openstackclient'
 
-depends 'poise-python', '~> 1.5'
+depends 'poise-python'
 
 issues_url 'https://launchpad.net/openstack-chef' if respond_to?(:issues_url)
 source_url 'https://github.com/openstack/cookbook-openstack-integration-test' if respond_to?(:source_url)

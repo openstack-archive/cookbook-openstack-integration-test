@@ -104,16 +104,6 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
-    it 'syncs /opt/tempest from github' do
-      expect(chef_run).to sync_git(
-        '/opt/tempest'
-      ).with(
-        repository: 'https://github.com/openstack/tempest',
-        reference: 'master',
-        depth: 1
-      )
-    end
-
     it 'uploads image1' do
       expect(chef_run).to upload_openstack_image_image('image1').with(
         identity_user: 'admin',
@@ -143,7 +133,7 @@ describe 'openstack-integration-test::setup' do
     end
 
     describe 'tempest.conf default' do
-      let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
+      let(:file) { chef_run.template('/etc/tempest/tempest.conf') }
 
       it 'creates tempest.conf' do
         expect(chef_run).to create_template(file.name).with(
@@ -184,7 +174,7 @@ describe 'openstack-integration-test::setup' do
         runner.node.normal['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
         runner.converge(described_recipe)
       end
-      let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
+      let(:file) { chef_run.template('/etc/tempest/tempest.conf') }
 
       it 'has a v2 auth URI with the secure scheme' do
         expect(chef_run).to render_file(file.name).with_content(

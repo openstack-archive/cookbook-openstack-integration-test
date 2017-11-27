@@ -27,7 +27,9 @@ end
 
 platform_options = node['openstack']['integration-test']['platform']
 
-python_runtime '2'
+python_runtime '2' do
+  provider :system
+end
 
 platform_options['tempest_packages'].each do |pkg|
   package pkg do
@@ -85,41 +87,18 @@ connection_params = {
     connection_params connection_params
     action :grant_role
   end
-end
 
-heat_stack_user_role = node['openstack']['integration-test']['heat_stack_user_role']
-openstack_role heat_stack_user_role do
-  connection_params connection_params
-end
+  heat_stack_user_role = node['openstack']['integration-test']['heat_stack_user_role']
+  openstack_role heat_stack_user_role do
+    connection_params connection_params
+  end
 
-tempest_path = '/opt/tempest'
-venv_path = '/opt/tempest-venv'
-
-python_virtualenv venv_path
-
-python_execute 'install tempest' do
-  action :nothing
-  command '-m pip install .'
-  cwd tempest_path
-  virtualenv venv_path
-end
-
-git tempest_path do
-  repository 'https://github.com/openstack/tempest'
-  reference 'master'
-  depth 1
-  action :sync
-  notifies :run, 'python_execute[install tempest]', :immediately
-end
-
-template "#{venv_path}/tempest.sh" do
-  source 'tempest.sh.erb'
-  user 'root'
-  group 'root'
-  mode 0o755
-  variables(
-    venv_path: venv_path
-  )
+  openstack_user service_user do
+    domain_name service_domain
+    user_name service_user
+    connection_params connection_params
+    action :grant_domain
+  end
 end
 
 %w(image1 image2).each do |img|
@@ -171,7 +150,7 @@ end
 integration_test_conf_options = merge_config_options 'integration-test'
 
 # create the keystone.conf from attributes
-template '/opt/tempest/etc/tempest.conf' do
+template '/etc/tempest/tempest.conf' do
   source 'openstack-service.conf.erb'
   cookbook 'openstack-common'
   owner 'root'

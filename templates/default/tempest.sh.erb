@@ -1,3 +1,2 @@
 #!/bin/bash
-source <%= @venv_path -%>/bin/activate
-tempest run --smoke --serial
+tempest run --smoke --serial --config-file /etc/tempest/tempest.conf
