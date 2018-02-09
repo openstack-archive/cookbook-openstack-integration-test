@@ -1,5 +1,7 @@
 default['openstack']['integration-test']['conf_secrets'] = {}
 default['openstack']['integration-test']['conf'].tap do |conf|
+  conf['DEFAULT']['log_dir'] = '/opt/tempest/logs'
+  conf['DEFAULT']['log_file'] = 'tempest.log'
   conf['auth']['use_dynamic_credentials'] = node['openstack']['integration-test']['use_dynamic_credentials']
   conf['auth']['default_credentials_domain_name'] = 'Default'
   conf['auth']['admin_domain_name'] = 'Default'
@@ -91,4 +93,5 @@ default['openstack']['integration-test']['conf'].tap do |conf|
   conf['service_available']['glance'] = true
   conf['service_available']['cinder'] = false
   conf['service_available']['nova'] = true
+  conf['oslo_concurrency']['lock_path'] = '/opt/tempest/tempest_lock'
 end

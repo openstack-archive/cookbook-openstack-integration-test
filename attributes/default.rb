@@ -44,13 +44,13 @@ default['openstack']['integration-test'] = {
     'name' => 'cirros-test1',
     'id' => '1ac790f6-903a-4833-979f-a38f1819e3b1',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img',
+    'source' => 'http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img',
   },
   'image2' => {
     'name' => 'cirros-test2',
     'id' => 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
     'flavor' => 99,
-    'source' => 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img',
+    'source' => 'http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img',
   },
 }
 
@@ -58,18 +58,20 @@ default['openstack']['integration-test'] = {
 case node['platform_family']
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
-    tempest_packages: %w(git libxslt-devel
+    tempest_packages: %w(git curl libxslt-devel
                          libxml2-devel python-testrepository
                          libffi-devel python-devel python-setuptools
-                         openstack-tempest),
+                         python-gabbi python-testscenarios
+                         python-ddt),
     package_overrides: '',
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w(git libssl-dev libffi-dev python-dev libxml2-dev
+    'tempest_packages' => %w(git curl libssl-dev libffi-dev python-dev libxml2-dev
                              libxslt1-dev libpq-dev libxml2-dev libxslt-dev
                              testrepository python-dev libffi-dev
-                             python-gabbi tempest),
+                             python-gabbi python-testscenarios
+                             python-ddt),
     'package_overrides' => '',
   }
 end

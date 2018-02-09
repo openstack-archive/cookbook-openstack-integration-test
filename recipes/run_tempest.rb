@@ -19,7 +19,7 @@
 
 execute 'run_tempest' do
   # Write log file to test VM's /root directory.
-  command 'tempest run --smoke --serial --config-file /etc/tempest/tempest.conf'
+  command 'cd /opt/tempest; /opt/tempest-venv/tempest.sh'
   action :nothing
 end
 

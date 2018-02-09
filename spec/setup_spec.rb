@@ -41,16 +41,9 @@ describe 'openstack-integration-test::setup' do
         'tempest_user1'
       ).with(
         domain_name: 'Default',
+        role_name: 'Member',
         project_name: 'tempest_project1',
         password: 'tempest_user1_pass',
-        connection_params: connection_params
-      )
-    end
-
-    it 'create service role' do
-      expect(chef_run).to create_openstack_role(
-        'Member'
-      ).with(
         connection_params: connection_params
       )
     end
@@ -79,6 +72,7 @@ describe 'openstack-integration-test::setup' do
         'tempest_user2'
       ).with(
         domain_name: 'Default',
+        role_name: 'Member',
         project_name: 'tempest_project2',
         password: 'tempest_user2_pass',
         connection_params: connection_params
@@ -96,11 +90,13 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
-    it 'create service role' do
-      expect(chef_run).to create_openstack_role(
-        'heat_stack_owner'
+    it 'syncs /opt/tempest from github' do
+      expect(chef_run).to sync_git(
+        '/opt/tempest'
       ).with(
-        connection_params: connection_params
+        repository: 'https://github.com/openstack/tempest',
+        reference: 'master',
+        depth: 1
       )
     end
 
@@ -114,7 +110,7 @@ describe 'openstack-integration-test::setup' do
         identity_project_domain_name: 'default',
         image_name: 'cirros-test1',
         image_id: '1ac790f6-903a-4833-979f-a38f1819e3b1',
-        image_url: 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img'
       )
     end
 
@@ -128,12 +124,12 @@ describe 'openstack-integration-test::setup' do
         identity_project_domain_name: 'default',
         image_name: 'cirros-test2',
         image_id: 'f7c2ac6d-0011-499f-a9ec-ca71348bf2e4',
-        image_url: 'http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img'
+        image_url: 'http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img'
       )
     end
 
     describe 'tempest.conf default' do
-      let(:file) { chef_run.template('/etc/tempest/tempest.conf') }
+      let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 
       it 'creates tempest.conf' do
         expect(chef_run).to create_template(file.name).with(
@@ -174,7 +170,7 @@ describe 'openstack-integration-test::setup' do
         runner.node.normal['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
         runner.converge(described_recipe)
       end
-      let(:file) { chef_run.template('/etc/tempest/tempest.conf') }
+      let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 
       it 'has a v2 auth URI with the secure scheme' do
         expect(chef_run).to render_file(file.name).with_content(

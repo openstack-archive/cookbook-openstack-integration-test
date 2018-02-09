@@ -27,7 +27,8 @@ end
 
 platform_options = node['openstack']['integration-test']['platform']
 
-python_runtime '2' do
+python_runtime 'tempest' do
+  version '2'
   provider :system
 end
 
@@ -38,8 +39,6 @@ platform_options['tempest_packages'].each do |pkg|
     action :upgrade
   end
 end
-
-package 'curl'
 
 identity_admin_endpoint = admin_endpoint 'identity'
 identity_public_endpoint = public_endpoint 'identity'
@@ -70,35 +69,52 @@ connection_params = {
     connection_params connection_params
   end
 
-  openstack_role service_role do
-    connection_params connection_params
-  end
-
   openstack_user service_user do
+    role_name service_role
     project_name service_project
     domain_name service_domain
     password service_pass
     connection_params connection_params
-  end
-
-  openstack_user service_user do
-    role_name service_role
-    project_name service_project
-    connection_params connection_params
-    action :grant_role
+    action [:create, :grant_role, :grant_domain]
   end
 
   heat_stack_user_role = node['openstack']['integration-test']['heat_stack_user_role']
   openstack_role heat_stack_user_role do
     connection_params connection_params
   end
+end
 
-  openstack_user service_user do
-    domain_name service_domain
-    user_name service_user
-    connection_params connection_params
-    action :grant_domain
-  end
+tempest_path = '/opt/tempest'
+venv_path = '/opt/tempest-venv'
+
+python_virtualenv venv_path do
+  python 'tempest'
+  system_site_packages true
+end
+
+python_execute 'install tempest' do
+  action :nothing
+  command '-m pip install .'
+  cwd tempest_path
+  virtualenv venv_path
+end
+
+git tempest_path do
+  repository 'https://github.com/openstack/tempest'
+  reference 'master'
+  depth 1
+  action :sync
+  notifies :run, 'python_execute[install tempest]', :immediately
+end
+
+template "#{venv_path}/tempest.sh" do
+  source 'tempest.sh.erb'
+  user 'root'
+  group 'root'
+  mode 0o755
+  variables(
+    venv_path: venv_path
+  )
 end
 
 %w(image1 image2).each do |img|
@@ -150,7 +166,7 @@ end
 integration_test_conf_options = merge_config_options 'integration-test'
 
 # create the keystone.conf from attributes
-template '/etc/tempest/tempest.conf' do
+template '/opt/tempest/etc/tempest.conf' do
   source 'openstack-service.conf.erb'
   cookbook 'openstack-common'
   owner 'root'
@@ -159,6 +175,13 @@ template '/etc/tempest/tempest.conf' do
   variables(
     service_config: integration_test_conf_options
   )
+end
+
+directory '/opt/tempest/logs' do
+  owner 'root'
+  group 'root'
+  mode 0755
+  action :create
 end
 
 # delete all secrets saved in the attribute
