@@ -165,6 +165,9 @@ end
 # merge all config options and secrets to be used in the nova.conf.erb
 integration_test_conf_options = merge_config_options 'integration-test'
 
+nova_user = node['openstack']['compute']['user']
+nova_group = node['openstack']['compute']['group']
+
 # create the keystone.conf from attributes
 template '/opt/tempest/etc/tempest.conf' do
   source 'openstack-service.conf.erb'
@@ -182,6 +185,14 @@ directory '/opt/tempest/logs' do
   group 'root'
   mode 0755
   action :create
+end
+
+# execute discover_hosts again before running tempest
+execute 'discover_hosts' do
+  user nova_user
+  group nova_group
+  command 'nova-manage cell_v2 discover_hosts'
+  action :run
 end
 
 # delete all secrets saved in the attribute

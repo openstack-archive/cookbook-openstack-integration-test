@@ -162,6 +162,12 @@ describe 'openstack-integration-test::setup' do
           'uri_v3 = http://127.0.0.1:5000/v3'
         )
       end
+
+      it 'discovers compute hosts' do
+        expect(chef_run).to run_execute('discover_hosts')
+          .with(user: 'nova',
+                group: 'nova')
+      end
     end
 
     describe 'tempest.conf with HTTPS' do
