@@ -4,7 +4,7 @@ maintainer_email 'openstack-dev@lists.openstack.org'
 license          'Apache-2.0'
 description      'Installs and configures the Tempest Integration Test Suite'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '16.0.0'
+version          '17.0.0'
 
 recipe 'openstack-integration-test::setup', 'Installs and configures Tempest'
 
@@ -12,11 +12,11 @@ recipe 'openstack-integration-test::setup', 'Installs and configures Tempest'
   supports os
 end
 
-depends 'openstack-common', '>= 16.0.0'
-depends 'openstack-identity', '>= 16.0.0'
-depends 'openstack-image', '>= 16.0.0'
-depends 'openstack-compute', '>= 16.0.0'
-depends 'openstack-block-storage', '>= 16.0.0'
+depends 'openstack-common', '>= 17.0.0'
+depends 'openstack-identity', '>= 17.0.0'
+depends 'openstack-image', '>= 17.0.0'
+depends 'openstack-compute', '>= 17.0.0'
+depends 'openstack-block-storage', '>= 17.0.0'
 depends 'openstackclient'
 
 depends 'poise-python'
