@@ -27,11 +27,6 @@ end
 
 platform_options = node['openstack']['integration-test']['platform']
 
-python_runtime 'tempest' do
-  version '2'
-  provider :system
-end
-
 platform_options['tempest_packages'].each do |pkg|
   package pkg do
     options platform_options['package_overrides']
@@ -88,7 +83,6 @@ tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
 
 python_virtualenv venv_path do
-  python 'tempest'
   system_site_packages true
 end
 
