@@ -27,7 +27,10 @@ end
 
 platform_options = node['openstack']['integration-test']['platform']
 
-python_runtime '2'
+python_runtime '2' do
+  # See https://github.com/poise/poise-python/issues/107
+  pip_version '9.0.3'
+end
 
 platform_options['tempest_packages'].each do |pkg|
   package pkg do
@@ -103,7 +106,10 @@ end
 tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
 
-python_virtualenv venv_path
+python_virtualenv venv_path do
+  # See https://github.com/poise/poise-python/issues/107
+  pip_version '9.0.3'
+end
 
 python_execute 'install tempest' do
   action :nothing
