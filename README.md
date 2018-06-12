@@ -1,7 +1,7 @@
 Team and repository tags
 ========================
 
-[![Team and repository tags](http://governance.openstack.org/badges/cookbook-openstack-integration-test.svg)](http://governance.openstack.org/reference/tags/index.html)
+[![Team and repository tags](https://governance.openstack.org/tc/badges/cookbook-openstack-integration-test.svg)](http://governance.openstack.org/reference/tags/index.html)
 
 <!-- Change things from this point on -->
 
