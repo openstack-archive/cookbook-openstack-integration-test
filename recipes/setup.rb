@@ -35,9 +35,8 @@ platform_options['tempest_packages'].each do |pkg|
   end
 end
 
-identity_admin_endpoint = admin_endpoint 'identity'
-identity_public_endpoint = public_endpoint 'identity'
-auth_url = ::URI.decode identity_admin_endpoint.to_s
+identity_endpoint = public_endpoint 'identity'
+auth_url = auth_uri_transform identity_endpoint.to_s, node['openstack']['api']['auth']['version']
 
 admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', admin_user
@@ -133,9 +132,9 @@ ruby_block 'Create nano flavor 99' do
   block do
     begin
       env = openstack_command_env(admin_user, admin_project, 'Default', 'Default')
-      output = openstack_command('nova', 'flavor-list', env)
+      output = openstack_command('openstack', 'flavor list', env)
       unless output.include? 'm1.nano'
-        openstack_command('nova', 'flavor-create m1.nano 99 64 0 1', env)
+        openstack_command('openstack', 'flavor create --id 99 --vcpus 1 --ram 64 --disk 1 m1.nano', env)
       end
     rescue RuntimeError => e
       Chef::Log.error("Could not create flavor m1.nano. Error was #{e.message}")
@@ -146,8 +145,8 @@ end
 node.default['openstack']['integration-test']['conf'].tap do |conf|
   conf['compute']['image_ref'] = node['openstack']['integration-test']['image1']['id']
   conf['compute']['image_ref_alt'] = node['openstack']['integration-test']['image2']['id']
-  conf['identity']['uri'] = "#{identity_public_endpoint.scheme}://#{identity_public_endpoint.host}:#{identity_public_endpoint.port}/v2.0/"
-  conf['identity']['uri_v3'] = "#{identity_public_endpoint.scheme}://#{identity_public_endpoint.host}:#{identity_public_endpoint.port}/v3/"
+  conf['identity']['uri'] = "#{identity_endpoint.scheme}://#{identity_endpoint.host}:#{identity_endpoint.port}/v3/"
+  conf['identity']['uri_v3'] = "#{identity_endpoint.scheme}://#{identity_endpoint.host}:#{identity_endpoint.port}/v3/"
 end
 
 node.default['openstack']['integration-test']['conf_secrets'].tap do |conf_secrets|
