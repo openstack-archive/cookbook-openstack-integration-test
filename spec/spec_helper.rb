@@ -6,16 +6,19 @@ ChefSpec::Coverage.start! { add_filter 'openstack-integration-test' }
 
 require 'chef/application'
 
-LOG_LEVEL = :fatal
+RSpec.configure do |config|
+  config.color = true
+  config.formatter = :documentation
+  config.log_level = :fatal
+end
+
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '7.3',
-  log_level: LOG_LEVEL,
+  version: '7.4',
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
   version: '16.04',
-  log_level: LOG_LEVEL,
 }.freeze
 
 shared_context 'tempest-stubs' do
@@ -25,7 +28,7 @@ shared_context 'tempest-stubs' do
         'OS_USERNAME'    => 'admin',
         'OS_PASSWORD'    => 'admin',
         'OS_PROJECT_NAME' => 'admin',
-        'OS_AUTH_URL' => 'http://127.0.0.1:35357/v3',
+        'OS_AUTH_URL' => 'http://127.0.0.1:5000/v3',
         'OS_USER_DOMAIN_NAME' => 'default',
         'OS_PROJECT_DOMAIN_NAME' => 'default',
         'OS_IDENTITY_API_VERSION' => 3,

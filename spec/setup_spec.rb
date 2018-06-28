@@ -12,7 +12,7 @@ describe 'openstack-integration-test::setup' do
     include_context 'tempest-stubs'
 
     connection_params = {
-      openstack_auth_url: 'http://127.0.0.1:35357/v3/auth/tokens',
+      openstack_auth_url: 'http://127.0.0.1:5000/v3/auth/tokens',
       openstack_username: 'admin',
       openstack_api_key: 'admin',
       openstack_project_name: 'admin',
@@ -105,7 +105,7 @@ describe 'openstack-integration-test::setup' do
         identity_user: 'admin',
         identity_pass: 'admin',
         identity_tenant: 'admin',
-        identity_uri: 'http://127.0.0.1:35357/v3',
+        identity_uri: 'http://127.0.0.1:5000/v3',
         identity_user_domain_name: 'default',
         identity_project_domain_name: 'default',
         image_name: 'cirros-test1',
@@ -119,7 +119,7 @@ describe 'openstack-integration-test::setup' do
         identity_user: 'admin',
         identity_pass: 'admin',
         identity_tenant: 'admin',
-        identity_uri: 'http://127.0.0.1:35357/v3',
+        identity_uri: 'http://127.0.0.1:5000/v3',
         identity_user_domain_name: 'default',
         identity_project_domain_name: 'default',
         image_name: 'cirros-test2',
@@ -151,9 +151,9 @@ describe 'openstack-integration-test::setup' do
         )
       end
 
-      it 'has a v2 auth URI with the default scheme' do
+      it 'has an auth URI with the default scheme' do
         expect(chef_run).to render_file(file.name).with_content(
-          'uri = http://127.0.0.1:5000/v2.0'
+          'uri = http://127.0.0.1:5000/v3'
         )
       end
 
@@ -178,9 +178,9 @@ describe 'openstack-integration-test::setup' do
       end
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 
-      it 'has a v2 auth URI with the secure scheme' do
+      it 'has an auth URI with the secure scheme' do
         expect(chef_run).to render_file(file.name).with_content(
-          'uri = https://127.0.0.1:5000/v2.0'
+          'uri = https://127.0.0.1:5000/v3'
         )
       end
 
