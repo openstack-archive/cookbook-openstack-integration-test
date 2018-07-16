@@ -173,7 +173,7 @@ describe 'openstack-integration-test::setup' do
     describe 'tempest.conf with HTTPS' do
       let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
       let(:chef_run) do
-        runner.node.normal['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
+        runner.node.override['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
         runner.converge(described_recipe)
       end
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
