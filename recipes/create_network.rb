@@ -16,7 +16,7 @@
 # limitations under the License.
 
 # Purpose: For use in kitchen tempest tests, create network/subnet identical to
-#          openstack-chef-repo/Rakefile _setup_local_network
+#          openstack-chef/Rakefile _setup_local_network
 
 class Chef::Recipe
   include ::Openstack

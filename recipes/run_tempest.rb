@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Purpose: Run tempest like openstack-chef-repo/Rakefile (used by kitchen)
+# Purpose: Run tempest like openstack-chef/Rakefile (used by kitchen)
 
 execute 'run_tempest' do
   # Write log file to test VM's /root directory.
