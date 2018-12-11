@@ -82,7 +82,9 @@ tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
 
 python_virtualenv venv_path do
-  system_site_packages true
+  pip_version '18.0'
+  setuptools_version '40.0.0'
+  wheel_version '0.31.1'
 end
 
 python_execute 'install tempest' do
