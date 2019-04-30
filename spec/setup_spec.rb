@@ -17,6 +17,7 @@ describe 'openstack-integration-test::setup' do
       openstack_api_key: 'admin',
       openstack_project_name: 'admin',
       openstack_domain_name: 'default',
+      openstack_endpoint_type: 'internalURL',
     }
 
     it 'installs tempest dependencies' do
@@ -151,15 +152,15 @@ describe 'openstack-integration-test::setup' do
         )
       end
 
-      it 'has an auth URI with the default scheme' do
-        expect(chef_run).to render_file(file.name).with_content(
-          'uri = http://127.0.0.1:5000/v3'
-        )
-      end
-
       it 'has a v3 auth URI with the default scheme' do
         expect(chef_run).to render_file(file.name).with_content(
           'uri_v3 = http://127.0.0.1:5000/v3'
+        )
+      end
+
+      it 'has an endpoint type matching the default value' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'endpoint_type = internalURL'
         )
       end
 
@@ -173,16 +174,10 @@ describe 'openstack-integration-test::setup' do
     describe 'tempest.conf with HTTPS' do
       let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
       let(:chef_run) do
-        runner.node.override['openstack']['endpoints']['public']['identity']['scheme'] = 'https'
+        runner.node.override['openstack']['endpoints']['internal']['identity']['scheme'] = 'https'
         runner.converge(described_recipe)
       end
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
-
-      it 'has an auth URI with the secure scheme' do
-        expect(chef_run).to render_file(file.name).with_content(
-          'uri = https://127.0.0.1:5000/v3'
-        )
-      end
 
       it 'has a v3 auth URI with the secure scheme' do
         expect(chef_run).to render_file(file.name).with_content(
