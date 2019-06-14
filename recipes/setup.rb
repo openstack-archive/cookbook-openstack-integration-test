@@ -78,18 +78,19 @@ connection_params = {
   end
 end
 
+include_recipe 'openstack-common'
+
 tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
 
-python_virtualenv venv_path do
-  system_site_packages true
+execute "virtualenv #{venv_path}" do
+  creates venv_path
 end
 
-python_execute 'install tempest' do
+execute 'install tempest' do
   action :nothing
-  command '-m pip install .'
+  command "#{venv_path}/bin/pip install ."
   cwd tempest_path
-  virtualenv venv_path
 end
 
 git tempest_path do
@@ -97,7 +98,7 @@ git tempest_path do
   reference '17.2.0'
   depth 1
   action :sync
-  notifies :run, 'python_execute[install tempest]', :immediately
+  notifies :run, 'execute[install tempest]', :immediately
 end
 
 template "#{venv_path}/tempest.sh" do

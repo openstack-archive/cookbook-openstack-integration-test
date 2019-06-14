@@ -90,6 +90,18 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
+    it do
+      expect(chef_run).to run_execute('virtualenv /opt/tempest-venv').with(creates: '/opt/tempest-venv')
+    end
+
+    it do
+      expect(chef_run).to nothing_execute('install tempest')
+        .with(
+          command: '/opt/tempest-venv/bin/pip install .',
+          cwd: '/opt/tempest'
+        )
+    end
+
     it 'syncs /opt/tempest from github' do
       expect(chef_run).to sync_git(
         '/opt/tempest'
@@ -98,6 +110,10 @@ describe 'openstack-integration-test::setup' do
         reference: '17.2.0',
         depth: 1
       )
+    end
+
+    it do
+      expect(chef_run.git('/opt/tempest')).to notify('execute[install tempest]').to(:run).immediately
     end
 
     it 'uploads image1' do

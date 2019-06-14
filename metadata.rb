@@ -19,8 +19,6 @@ depends 'openstack-compute', '>= 17.0.0'
 depends 'openstack-block-storage', '>= 17.0.0'
 depends 'openstackclient'
 
-depends 'poise-python'
-
 issues_url 'https://launchpad.net/openstack-chef' if respond_to?(:issues_url)
 source_url 'https://github.com/openstack/cookbook-openstack-integration-test' if respond_to?(:source_url)
 chef_version '>= 12.5' if respond_to?(:chef_version)
