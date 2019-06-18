@@ -45,16 +45,17 @@ admin_pass = get_password 'user', admin_user
 admin_project = node['openstack']['identity']['admin_project']
 admin_domain = node['openstack']['identity']['admin_domain_name']
 admin_project_domain_name = node['openstack']['identity']['admin_project_domain']
-
-endpoint_type = node['openstack']['identity']['endpoint_type']
+# TODO(ramereth): commenting this out until
+# https://github.com/fog/fog-openstack/pull/494 gets merged and released.
+# endpoint_type = node['openstack']['identity']['endpoint_type']
 
 connection_params = {
-  openstack_auth_url:      "#{auth_url}/auth/tokens",
+  openstack_auth_url:      auth_url,
   openstack_username:      admin_user,
   openstack_api_key:       admin_pass,
   openstack_project_name:  admin_project,
   openstack_domain_name:   admin_domain,
-  openstack_endpoint_type: endpoint_type,
+  # openstack_endpoint_type: endpoint_type,
 }
 
 %w(user1 user2).each_with_index do |user|
@@ -152,7 +153,7 @@ node.default['openstack']['integration-test']['conf'].tap do |conf|
   conf['compute']['image_ref'] = node['openstack']['integration-test']['image1']['id']
   conf['compute']['image_ref_alt'] = node['openstack']['integration-test']['image2']['id']
   conf['identity']['uri_v3'] = identity_endpoint.to_s
-  conf['identity']['v3_endpoint_type'] = endpoint_type
+  # conf['identity']['v3_endpoint_type'] = endpoint_type
 end
 
 node.default['openstack']['integration-test']['conf_secrets'].tap do |conf_secrets|

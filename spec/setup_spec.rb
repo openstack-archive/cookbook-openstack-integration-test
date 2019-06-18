@@ -12,12 +12,12 @@ describe 'openstack-integration-test::setup' do
     include_context 'tempest-stubs'
 
     connection_params = {
-      openstack_auth_url: 'http://127.0.0.1:5000/v3/auth/tokens',
+      openstack_auth_url: 'http://127.0.0.1:5000/v3',
       openstack_username: 'admin',
       openstack_api_key: 'admin',
       openstack_project_name: 'admin',
       openstack_domain_name: 'default',
-      openstack_endpoint_type: 'internalURL',
+      # openstack_endpoint_type: 'internalURL',
     }
 
     it 'installs tempest dependencies' do
@@ -174,11 +174,11 @@ describe 'openstack-integration-test::setup' do
         )
       end
 
-      it 'has an endpoint type matching the default value' do
-        expect(chef_run).to render_file(file.name).with_content(
-          'endpoint_type = internalURL'
-        )
-      end
+      # it 'has an endpoint type matching the default value' do
+      #   expect(chef_run).to render_file(file.name).with_content(
+      #     'endpoint_type = internalURL'
+      #   )
+      # end
 
       it 'discovers compute hosts' do
         expect(chef_run).to run_execute('discover_hosts')
