@@ -17,7 +17,7 @@ describe 'openstack-integration-test::setup' do
       openstack_api_key: 'admin',
       openstack_project_name: 'admin',
       openstack_domain_name: 'default',
-      # openstack_endpoint_type: 'internalURL',
+      openstack_endpoint_type: 'internalURL',
     }
 
     it 'installs tempest dependencies' do
@@ -92,13 +92,13 @@ describe 'openstack-integration-test::setup' do
     end
 
     it do
-      expect(chef_run).to run_execute('virtualenv /opt/tempest-venv').with(creates: '/opt/tempest-venv')
+      expect(chef_run).to run_execute('create virtualenv for tempest').with(creates: '/opt/tempest-venv')
     end
 
     it do
       expect(chef_run).to nothing_execute('install tempest')
         .with(
-          command: '/opt/tempest-venv/bin/pip install .',
+          command: '/opt/tempest-venv/bin/pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt tempest==22.1.0',
           cwd: '/opt/tempest'
         )
     end
@@ -107,8 +107,8 @@ describe 'openstack-integration-test::setup' do
       expect(chef_run).to sync_git(
         '/opt/tempest'
       ).with(
-        repository: 'https://github.com/openstack/tempest',
-        reference: '17.2.0',
+        repository: 'https://opendev.org/openstack/tempest',
+        reference: '22.1.0',
         depth: 1
       )
     end
@@ -174,11 +174,11 @@ describe 'openstack-integration-test::setup' do
         )
       end
 
-      # it 'has an endpoint type matching the default value' do
-      #   expect(chef_run).to render_file(file.name).with_content(
-      #     'endpoint_type = internalURL'
-      #   )
-      # end
+      it 'has a v3 endpoint type matching the default value' do
+        expect(chef_run).to render_file(file.name).with_content(
+          'v3_endpoint_type = internalURL'
+        )
+      end
 
       it 'discovers compute hosts' do
         expect(chef_run).to run_execute('discover_hosts')
