@@ -20,6 +20,7 @@ default['openstack']['integration-test']['conf'].tap do |conf|
   conf['identity']['alt_project_name']  = node['openstack']['integration-test']['user2']['project_name']
   conf['identity']['default_domain_id'] = 'default'
   conf['identity']['admin_domain_scope'] = false
+  conf['validation']['run_validation'] = false
   conf['validation']['image_alt_ssh_user'] = node['openstack']['integration-test']['alt_ssh_user']
   conf['validation']['image_ssh_user'] = node['openstack']['integration-test']['ssh_user']
   conf['compute']['flavor_ref'] = node['openstack']['integration-test']['image1']['flavor']
@@ -58,6 +59,55 @@ default['openstack']['integration-test']['conf'].tap do |conf|
   conf['network']['public_network_id'] = ''
   conf['network']['public_router_id'] = ''
   conf['network']['quantum_available'] = false
+  conf['network-feature-enabled']['api_extensions'] = %w(
+    address-scope
+    agent
+    allowed-address-pairs
+    auto-allocated-topology
+    availability_zone
+    availability_zone_filter
+    binding
+    binding-extended
+    default-subnetpools
+    dhcp_agent_scheduler
+    dvr
+    empty-string-filtering
+    ext-gw-mode
+    external-net
+    extra_dhcp_opt
+    extraroute
+    filter-validation
+    fip-port-details
+    flavors
+    ip-substring-filtering
+    l3-flavors
+    l3-ha
+    l3_agent_scheduler
+    multi-provider
+    net-mtu
+    net-mtu-writable
+    network-ip-availability
+    network_availability_zone
+    pagination
+    port-mac-address-regenerate
+    port-security-groups-filtering
+    project-id
+    provider
+    quota_details
+    quotas
+    rbac-policies
+    revision-if-match
+    router
+    router_availability_zone
+    security-group
+    service-type
+    sorting
+    standard-attr-description
+    standard-attr-revisions
+    standard-attr-tag
+    standard-attr-timestamp
+    subnet-service-types
+    subnet_allocation).join(',')
   conf['volume']['catalog_type'] = 'volume'
   conf['volume']['build_interval'] = 3
   conf['volume']['build_timeout'] = 400

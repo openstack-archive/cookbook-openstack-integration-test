@@ -45,9 +45,7 @@ admin_pass = get_password 'user', admin_user
 admin_project = node['openstack']['identity']['admin_project']
 admin_domain = node['openstack']['identity']['admin_domain_name']
 admin_project_domain_name = node['openstack']['identity']['admin_project_domain']
-# TODO(ramereth): commenting this out until
-# https://github.com/fog/fog-openstack/pull/494 gets merged and released.
-# endpoint_type = node['openstack']['identity']['endpoint_type']
+endpoint_type = node['openstack']['identity']['endpoint_type']
 
 connection_params = {
   openstack_auth_url:      auth_url,
@@ -55,7 +53,7 @@ connection_params = {
   openstack_api_key:       admin_pass,
   openstack_project_name:  admin_project,
   openstack_domain_name:   admin_domain,
-  # openstack_endpoint_type: endpoint_type,
+  openstack_endpoint_type: endpoint_type,
 }
 
 %w(user1 user2).each_with_index do |user|
@@ -89,19 +87,33 @@ include_recipe 'openstack-common'
 tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
 
-execute "virtualenv #{venv_path}" do
+case node['platform_family']
+when 'debian'
+  venv_cmd = 'virtualenv -p python3'
+when 'fedora', 'rhel'
+  venv_cmd = 'virtualenv'
+end
+
+execute 'create virtualenv for tempest' do
+  command "#{venv_cmd} #{venv_path}"
   creates venv_path
 end
 
+# Note(jh): Make sure to keep the constraint definition in sync with
+# the tempest version
+tempest_ver = '22.1.0'
+constraint = '-c https://opendev.org/openstack/requirements/raw/'\
+  'branch/stable/train/upper-constraints.txt'
+
 execute 'install tempest' do
   action :nothing
-  command "#{venv_path}/bin/pip install ."
+  command "#{venv_path}/bin/pip install #{constraint} tempest==#{tempest_ver}"
   cwd tempest_path
 end
 
 git tempest_path do
-  repository 'https://github.com/openstack/tempest'
-  reference '17.2.0'
+  repository 'https://opendev.org/openstack/tempest'
+  reference tempest_ver
   depth 1
   action :sync
   notifies :run, 'execute[install tempest]', :immediately
@@ -153,7 +165,7 @@ node.default['openstack']['integration-test']['conf'].tap do |conf|
   conf['compute']['image_ref'] = node['openstack']['integration-test']['image1']['id']
   conf['compute']['image_ref_alt'] = node['openstack']['integration-test']['image2']['id']
   conf['identity']['uri_v3'] = identity_endpoint.to_s
-  # conf['identity']['v3_endpoint_type'] = endpoint_type
+  conf['identity']['v3_endpoint_type'] = endpoint_type
 end
 
 node.default['openstack']['integration-test']['conf_secrets'].tap do |conf_secrets|
