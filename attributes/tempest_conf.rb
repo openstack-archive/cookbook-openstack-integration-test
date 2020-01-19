@@ -108,7 +108,7 @@ default['openstack']['integration-test']['conf'].tap do |conf|
     standard-attr-timestamp
     subnet-service-types
     subnet_allocation).join(',')
-  conf['volume']['catalog_type'] = 'volume'
+  conf['volume']['catalog_type'] = 'volumev3'
   conf['volume']['build_interval'] = 3
   conf['volume']['build_timeout'] = 400
   conf['volume']['backup'] = false
@@ -131,17 +131,11 @@ default['openstack']['integration-test']['conf'].tap do |conf|
   conf['boto']['num_retries'] = 1
   conf['boto']['build_timeout'] = 400
   conf['boto']['build_interval'] = 3
-  conf['service_available']['marconi'] = false
-  conf['service_available']['trove'] = false
-  conf['service_available']['savanna'] = false
-  conf['service_available']['ironic'] = false
-  conf['service_available']['ceilometer'] = true
-  conf['service_available']['horizon'] = true
-  conf['service_available']['heat'] = true
-  conf['service_available']['swift'] = false
-  conf['service_available']['neutron'] = false
-  conf['service_available']['glance'] = true
   conf['service_available']['cinder'] = false
+  conf['service_available']['glance'] = true
+  conf['service_available']['heat'] = true
+  conf['service_available']['neutron'] = false
   conf['service_available']['nova'] = true
+  conf['service_available']['swift'] = false
   conf['oslo_concurrency']['lock_path'] = '/opt/tempest/tempest_lock'
 end

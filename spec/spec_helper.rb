@@ -46,6 +46,9 @@ shared_context 'tempest-stubs' do
     allow_any_instance_of(Chef::Resource::RubyBlock).to receive(:openstack_command_env)
       .with('admin', 'admin', 'Default', 'Default')
       .and_return(env)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
+      .with('token', 'designate_rndc')
+      .and_return('rndc-key')
     allow(Chef::Application).to receive(:fatal!)
   end
 end

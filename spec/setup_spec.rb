@@ -145,6 +145,18 @@ describe 'openstack-integration-test::setup' do
       )
     end
 
+    it do
+      expect(chef_run).to create_template('/opt/tempest/etc/tempest-blacklist')
+    end
+
+    [
+      /^tempest.api.compute.servers.test_create_server.ServersTestBootFromVolume$/,
+    ].each do |line|
+      it do
+        expect(chef_run).to render_file('/opt/tempest/etc/tempest-blacklist').with_content(line)
+      end
+    end
+
     describe 'tempest.conf default' do
       let(:file) { chef_run.template('/opt/tempest/etc/tempest.conf') }
 
@@ -184,6 +196,35 @@ describe 'openstack-integration-test::setup' do
         expect(chef_run).to run_execute('discover_hosts')
           .with(user: 'nova',
                 group: 'nova')
+      end
+    end
+    it 'Create role for heat user' do
+      expect(chef_run).to create_openstack_role('heat_stack_owner')
+    end
+    it do
+      expect(chef_run).to run_ruby_block('Create nano flavor 99')
+    end
+    context 'Disable services to test' do
+      cached(:chef_run) do
+        runner.node.override['openstack']['integration-test']['conf']['service_available']['heat'] = false
+        runner.node.override['openstack']['integration-test']['conf']['service_available']['glance'] = false
+        runner.node.override['openstack']['integration-test']['conf']['service_available']['nova'] = false
+        runner.converge(described_recipe)
+      end
+      it do
+        expect(chef_run).to_not create_openstack_role('heat_stack_owner')
+      end
+      it do
+        expect(chef_run).to_not upload_openstack_image_image('image1')
+      end
+      it do
+        expect(chef_run).to_not upload_openstack_image_image('image2')
+      end
+      it do
+        expect(chef_run).to_not run_ruby_block('Create nano flavor 99')
+      end
+      it do
+        expect(chef_run).to_not run_execute('discover_hosts')
       end
     end
 

@@ -1,0 +1,26 @@
+heat_template_version: rocky
+
+description: Simple template to deploy a single compute instance
+
+resources:
+  private_net:
+    type: OS::Neutron::Net
+    properties:
+      name: private
+  private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: private-subnet
+      network_id: { get_resource: private_net }
+      cidr: 10.0.99.0/24
+      allocation_pools:
+        - start: 10.0.99.10
+          end: 10.0.99.100
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      key_name: heat_key
+      image: cirros
+      flavor: m1.small
+      networks:
+        - network: { get_resource: private_net }

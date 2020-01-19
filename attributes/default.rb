@@ -26,6 +26,13 @@ default['openstack']['integration-test'] = {
   'ssh_user' => 'cirros',
   'fixed_network' => 'local_net',
   'heat_stack_user_role' => 'heat_stack_owner',
+  'nova_user' => 'nova',
+  'nova_group' => 'nova',
+  'blacklist_regex' => [
+    # TODO(ramereth): iSCSI service needs to be fixed in block-storage
+    # due to missing tgtadm executable and functioning iscsid service.
+    'tempest.api.compute.servers.test_create_server.ServersTestBootFromVolume',
+  ],
   'user1' => {
     'user_name' => 'tempest_user1',
     'password' => 'tempest_user1_pass',

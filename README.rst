@@ -29,12 +29,11 @@ Cookbooks
 
 The following cookbooks are dependencies:
 
-- 'openstack-block-storage', '>= 18.0.0'
+- 'bind', '~> 2.3.1'
 - 'openstackclient'
 - 'openstack-common', '>= 18.0.0'
-- 'openstack-compute', '>= 18.0.0'
-- 'openstack-identity', '>= 18.0.0'
 - 'openstack-image', '>= 18.0.0'
+- 'resolver'
 
 Recipes
 =======
@@ -43,6 +42,16 @@ create_network
 --------------
 
 - Create a test network and subnet for use in kitchen tests
+
+dns
+---
+
+- Setup environment for testing designate
+
+orchestration
+-------------
+
+- Setup environment for testing heat
 
 run_tempest
 -----------
