@@ -6,7 +6,8 @@ default['openstack']['integration-test']['conf'].tap do |conf|
   conf['auth']['default_credentials_domain_name'] = 'Default'
   conf['auth']['admin_domain_name'] = 'Default'
   conf['identity']['catalog_type'] = 'identity'
-  conf['identity']['disable_ssl_certificate_validation'] = node['openstack']['integration-test']['disable_ssl_validation']
+  conf['identity']['disable_ssl_certificate_validation'] =
+    node['openstack']['integration-test']['disable_ssl_validation']
   conf['identity']['v3_endpoint_type'] = 'publicURL'
   conf['identity']['strategy'] = 'keystone'
   conf['identity']['region'] = 'RegionOne'

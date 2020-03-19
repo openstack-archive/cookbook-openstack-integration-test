@@ -2,25 +2,26 @@ source 'https://supermarket.chef.io'
 
 solver :ruby, :required
 
-%w(
-  client
-  -common
-  -dns
-  -identity
-  -image
-  -network
-  -ops-database
-  -ops-messaging
-).each do |cookbook|
+[
+  %w(client dep),
+  %w(-common dep),
+  %w(-compute integration),
+  %w(-dns dep),
+  %w(-identity dep),
+  %w(-image dep),
+  %w(-network dep),
+  %w(-ops-database integration),
+  %w(-ops-messaging integration),
+].each do |cookbook, group|
   if Dir.exist?("../cookbook-openstack#{cookbook}")
-    cookbook "openstack#{cookbook}", path: "../cookbook-openstack#{cookbook}"
+    cookbook "openstack#{cookbook}", path: "../cookbook-openstack#{cookbook}", group: group
   else
-    cookbook "openstack#{cookbook}", git: "https://opendev.org/openstack/cookbook-openstack#{cookbook}"
+    cookbook "openstack#{cookbook}", git: "https://opendev.org/openstack/cookbook-openstack#{cookbook}", group: group
   end
 end
 
-# TODO(ramereth): Remove after this PR is merged
+# TODO(ramereth): Remove after this PR is released
 # https://github.com/joyofhex/cookbook-bind/pull/60
-cookbook 'bind', github: 'ramereth/cookbook-bind', branch: 'fix-notifies-with-delayed-actions'
+cookbook 'bind', github: 'joyofhex/cookbook-bind'
 
 metadata

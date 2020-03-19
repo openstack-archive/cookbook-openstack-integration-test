@@ -1,3 +1,23 @@
+# encoding: UTF-8
+#
+# Cookbook:: openstack-integration-test
+# Recipe:: dns
+#
+# Copyright:: 2020, Oregon State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 class ::Chef::Recipe
   include ::Openstack
   include BindCookbook::Helpers
@@ -5,6 +25,10 @@ end
 
 class ::Chef::Resource
   include BindCookbook::Helpers
+end
+
+service 'systemd-resolved' do
+  action [:stop, :disable]
 end
 
 # Match what opendev/base-jobs uses for unbound:
@@ -30,7 +54,7 @@ template "#{default_property_for(:sysconfdir, false)}/rndc.key" do
   cookbook 'openstack-dns'
   owner default_property_for(:run_user, false)
   group default_property_for(:run_group, false)
-  mode 00440
+  mode '440'
   sensitive true
   variables(
     secret: rndc_secret

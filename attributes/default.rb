@@ -1,9 +1,10 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-integration-test
+# Cookbook:: openstack-integration-test
 # Attributes:: default
 #
-# Copyright 2014, Rackspace US, Inc.
+# Copyright:: 2014, Rackspace US, Inc.
+# Copyright:: 2017-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -65,20 +66,42 @@ default['openstack']['integration-test'] = {
 case node['platform_family']
 when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['integration-test']['platform'] = {
-    tempest_packages: %w(git curl libxslt-devel
-                         libxml2-devel python-testrepository
-                         libffi-devel python-devel
-                         python-gabbi python-testscenarios
-                         python-ddt),
+    tempest_packages:
+      %w(
+        git
+        curl
+        libxslt-devel
+        libxml2-devel
+        python-testrepository
+        libffi-devel
+        python-devel
+        python-gabbi
+        python-testscenarios
+        python-ddt
+      ),
     package_overrides: '',
   }
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
-    'tempest_packages' => %w(git curl libssl-dev libffi-dev python-dev libxml2-dev
-                             libxslt1-dev libpq-dev libxml2-dev libxslt-dev
-                             testrepository python-dev libffi-dev
-                             python-gabbi python-testscenarios
-                             python-ddt),
+    'tempest_packages' =>
+      %w(
+        git
+        curl
+        libssl-dev
+        libffi-dev
+        python-dev
+        libxml2-dev
+        libxslt1-dev
+        libpq-dev
+        libxml2-dev
+        libxslt-dev
+        testrepository
+        python-dev
+        libffi-dev
+        python-gabbi
+        python-testscenarios
+        python-ddt
+      ),
     'package_overrides' => '',
   }
 end

@@ -21,12 +21,7 @@ describe 'openstack-integration-test::setup' do
     }
 
     it 'installs tempest dependencies' do
-      packages = %w(git libxml2-dev libxslt-dev testrepository python-dev
-                    libffi-dev)
-
-      packages.each do |pkg|
-        expect(chef_run).to upgrade_package(pkg)
-      end
+      expect(chef_run).to upgrade_package %w(git curl libssl-dev libffi-dev python-dev libxml2-dev libxslt1-dev libpq-dev libxml2-dev libxslt-dev testrepository python-dev libffi-dev python-gabbi python-testscenarios python-ddt)
     end
 
     it 'registers tempest_project1 Project' do
@@ -164,7 +159,7 @@ describe 'openstack-integration-test::setup' do
         expect(chef_run).to create_template(file.name).with(
           user: 'root',
           group: 'root',
-          mode: 0o0600
+          mode: '600'
         )
       end
 

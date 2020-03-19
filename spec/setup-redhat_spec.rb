@@ -12,20 +12,7 @@ describe 'openstack-integration-test::setup' do
     include_context 'tempest-stubs'
 
     it 'installs tempest dependencies' do
-      %w(
-        curl
-        git
-        libffi-devel
-        libxml2-devel
-        libxslt-devel
-        python-ddt
-        python-devel
-        python-gabbi
-        python-testrepository
-        python-testscenarios
-      ).each do |pkg|
-        expect(chef_run).to upgrade_package(pkg)
-      end
+      expect(chef_run).to upgrade_package %w(git curl libxslt-devel libxml2-devel python-testrepository libffi-devel python-devel python-gabbi python-testscenarios python-ddt)
     end
   end
 end

@@ -22,8 +22,8 @@ shared_context 'tempest-stubs' do
   before do
     env =
       {
-        'OS_USERNAME'    => 'admin',
-        'OS_PASSWORD'    => 'admin',
+        'OS_USERNAME' => 'admin',
+        'OS_PASSWORD' => 'admin',
         'OS_PROJECT_NAME' => 'admin',
         'OS_AUTH_URL' => 'http://127.0.0.1:5000/v3',
         'OS_USER_DOMAIN_NAME' => 'default',

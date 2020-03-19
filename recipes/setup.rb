@@ -1,9 +1,10 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-integration-test
+# Cookbook:: openstack-integration-test
 # Recipe:: setup
 #
-# Copyright 2014, Rackspace US, Inc.
+# Copyright:: 2014, Rackspace US, Inc.
+# Copyright:: 2017-2020, Oregon State university
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -30,12 +31,9 @@ end
 platform_options = node['openstack']['integration-test']['platform']
 service_available = node['openstack']['integration-test']['conf']['service_available']
 
-platform_options['tempest_packages'].each do |pkg|
-  package pkg do
-    options platform_options['package_overrides']
-
-    action :upgrade
-  end
+package platform_options['tempest_packages'] do
+  options platform_options['package_overrides']
+  action :upgrade
 end
 
 identity_endpoint = internal_endpoint 'identity'
@@ -49,11 +47,11 @@ admin_project_domain_name = node['openstack']['identity']['admin_project_domain'
 endpoint_type = node['openstack']['identity']['endpoint_type']
 
 connection_params = {
-  openstack_auth_url:      auth_url,
-  openstack_username:      admin_user,
-  openstack_api_key:       admin_pass,
-  openstack_project_name:  admin_project,
-  openstack_domain_name:   admin_domain,
+  openstack_auth_url: auth_url,
+  openstack_username: admin_user,
+  openstack_api_key: admin_pass,
+  openstack_project_name: admin_project,
+  openstack_domain_name: admin_domain,
   openstack_endpoint_type: endpoint_type,
 }
 
@@ -84,6 +82,7 @@ openstack_role node['openstack']['integration-test']['heat_stack_user_role'] do
 end
 
 include_recipe 'openstack-common'
+build_essential 'tempest'
 
 tempest_path = '/opt/tempest'
 venv_path = '/opt/tempest-venv'
@@ -103,8 +102,7 @@ end
 # Note(jh): Make sure to keep the constraint definition in sync with
 # the tempest version
 tempest_ver = '22.1.0'
-constraint = '-c https://opendev.org/openstack/requirements/raw/'\
-  'branch/stable/train/upper-constraints.txt'
+constraint = '-c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt'
 
 execute 'install tempest' do
   action :nothing
@@ -124,7 +122,7 @@ template "#{venv_path}/tempest.sh" do
   source 'tempest.sh.erb'
   user 'root'
   group 'root'
-  mode 0o755
+  mode '755'
   variables(
     venv_path: venv_path
   )
@@ -188,7 +186,7 @@ template '/opt/tempest/etc/tempest.conf' do
   cookbook 'openstack-common'
   owner 'root'
   group 'root'
-  mode 0o0600
+  mode '600'
   variables(
     service_config: integration_test_conf_options
   )
@@ -197,7 +195,7 @@ end
 directory '/opt/tempest/logs' do
   owner 'root'
   group 'root'
-  mode 0755
+  mode '755'
   action :create
 end
 

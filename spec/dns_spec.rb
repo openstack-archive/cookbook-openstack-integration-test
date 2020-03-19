@@ -11,6 +11,11 @@ describe 'openstack-integration-test::dns' do
 
     include_context 'tempest-stubs'
 
+    it do
+      expect(chef_run).to stop_service('systemd-resolved')
+      expect(chef_run).to disable_service('systemd-resolved')
+    end
+
     [
       /^nameserver 1.0.0.1$/,
       /^nameserver 8.8.8.8$/,
@@ -38,7 +43,7 @@ describe 'openstack-integration-test::dns' do
         source: 'rndc.key.erb',
         owner: 'bind',
         group: 'bind',
-        mode: 00440,
+        mode: '440',
         sensitive: true,
         variables: {
           secret: 'rndc-key',

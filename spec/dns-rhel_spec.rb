@@ -38,7 +38,7 @@ describe 'openstack-integration-test::dns' do
         source: 'rndc.key.erb',
         owner: 'named',
         group: 'named',
-        mode: 00440,
+        mode: '440',
         sensitive: true,
         variables: {
           secret: 'rndc-key',
