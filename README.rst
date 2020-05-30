@@ -21,7 +21,7 @@ Requirements
 ============
 
 - Chef 15 or higher
-- Chef Workstation 0.15.18 for testing (also includes Berkshelf for
+- Chef Workstation 0.18.3 for testing (also includes Berkshelf for
   cookbook dependency resolution)
 
 Cookbooks
@@ -31,8 +31,9 @@ The following cookbooks are dependencies:
 
 - 'bind', '~> 2.3.1'
 - 'openstackclient'
-- 'openstack-common', '>= 19.0.0'
-- 'openstack-image', '>= 19.0.0'
+- 'openstack-common', '>= 20.0.0'
+- 'openstack-dns', '>= 20.0.0'
+- 'openstack-image', '>= 20.0.0'
 - 'resolver'
 
 Recipes

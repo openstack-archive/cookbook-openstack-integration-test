@@ -55,7 +55,7 @@ connection_params = {
   openstack_endpoint_type: endpoint_type,
 }
 
-%w(user1 user2).each_with_index do |user|
+%w(user1 user2).each do |user|
   service_user = node['openstack']['integration-test'][user]['user_name']
   service_project = node['openstack']['integration-test'][user]['project_name']
   service_role = node['openstack']['integration-test'][user]['role']

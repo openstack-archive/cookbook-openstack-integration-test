@@ -26,8 +26,6 @@ execute 'run_tempest' do
 end
 
 # Run tempest after everything else.
-log 'start_tempest' do
-  message 'Starting tempest at the very end.'
-  level :info
+notify_group 'start_tempest' do
   notifies :run, 'execute[run_tempest]', :delayed
 end
