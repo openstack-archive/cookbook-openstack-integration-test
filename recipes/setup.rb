@@ -18,8 +18,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'uri'
-
 class Chef::Recipe
   include ::Openstack
 end
@@ -37,7 +35,7 @@ package platform_options['tempest_packages'] do
 end
 
 identity_endpoint = internal_endpoint 'identity'
-auth_url = ::URI.decode identity_endpoint.to_s
+auth_url = identity_endpoint.to_s
 
 admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', admin_user
