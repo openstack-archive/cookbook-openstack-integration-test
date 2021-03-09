@@ -14,7 +14,7 @@ depends 'openstackclient'
 depends 'openstack-common', '>= 20.0.0'
 depends 'openstack-dns', '>= 20.0.0'
 depends 'openstack-image', '>= 20.0.0'
-depends 'resolver'
+depends 'resolver', '>= 3.0.0'
 
 issues_url 'https://launchpad.net/openstack-chef'
 source_url 'https://opendev.org/openstack/cookbook-openstack-integration-test'

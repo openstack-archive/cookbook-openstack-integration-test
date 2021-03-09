@@ -15,13 +15,10 @@ describe 'openstack-integration-test::dns' do
       expect(chef_run).to disable_service('systemd-resolved')
     end
 
-    [
-      /^nameserver 1.0.0.1$/,
-      /^nameserver 8.8.8.8$/,
-    ].each do |line|
-      it do
-        expect(chef_run).to render_file('/etc/resolv.conf').with_content(line)
-      end
+    it do
+      expect(chef_run).to set_resolver_config('/etc/resolv.conf').with(
+        nameservers: %w(1.0.0.1 8.8.8.8)
+      )
     end
 
     it do

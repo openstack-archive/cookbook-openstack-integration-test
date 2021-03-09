@@ -32,10 +32,10 @@ end
 
 # Match what opendev/base-jobs uses for unbound:
 # https://opendev.org/opendev/base-jobs/src/branch/master/roles/configure-unbound/defaults/main.yaml#L1-L7
-node.default['resolver']['search'] = []
-node.default['resolver']['nameservers'] = %w(1.0.0.1 8.8.8.8)
 
-include_recipe 'resolver'
+resolver_config '/etc/resolv.conf' do
+  nameservers %w(1.0.0.1 8.8.8.8)
+end
 
 # Disable and stop unbound so we can properly test Designate
 service 'unbound' do
