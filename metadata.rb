@@ -9,7 +9,7 @@ version          '20.0.0'
   supports os
 end
 
-depends 'bind', '~> 3.1.0'
+depends 'bind', '~> 3.0.0'
 depends 'openstackclient'
 depends 'openstack-common', '>= 20.0.0'
 depends 'openstack-dns', '>= 20.0.0'

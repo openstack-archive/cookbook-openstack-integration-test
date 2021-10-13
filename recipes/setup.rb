@@ -96,6 +96,9 @@ execute 'create virtualenv for tempest' do
   creates venv_path
 end
 
+# TODO(ramereth): RDO Train ships a cacert.pem which contains the expired LetsEncrypt root cert
+cookbook_file "#{venv_path}/lib/python2.7/site-packages/pip/_vendor/requests/cacert.pem" if platform_family?('rhel')
+
 # Note(jh): Make sure to keep the constraint definition in sync with
 # the tempest version
 tempest_ver = '22.1.0'

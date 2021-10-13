@@ -20,8 +20,4 @@ solver :ruby, :required
   end
 end
 
-# TODO(ramereth): Remove after this PR is released
-# https://github.com/joyofhex/cookbook-bind/pull/60
-cookbook 'bind', github: 'joyofhex/cookbook-bind'
-
 metadata
