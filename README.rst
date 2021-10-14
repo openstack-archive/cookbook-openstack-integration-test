@@ -20,8 +20,8 @@ https://docs.openstack.org/tempest/latest/
 Requirements
 ============
 
-- Chef 15 or higher
-- Chef Workstation 21.2.303 for testing (also includes Berkshelf for
+- Chef 16 or higher
+- Chef Workstation 21.10.640 for testing (also includes Berkshelf for
   cookbook dependency resolution)
 
 Cookbooks
@@ -29,12 +29,12 @@ Cookbooks
 
 The following cookbooks are dependencies:
 
-- 'bind', '~> 2.3.1'
+- 'bind', '~> 3.0'
 - 'openstackclient'
 - 'openstack-common', '>= 20.0.0'
 - 'openstack-dns', '>= 20.0.0'
 - 'openstack-image', '>= 20.0.0'
-- 'resolver'
+- 'resolver', '>= 3.0'
 
 Recipes
 =======
@@ -89,7 +89,7 @@ License and Author
 +-----------------+--------------------------------------------------+
 | **Copyright**   | Copyright (c) 2014, Rackspace US, Inc.           |
 +-----------------+--------------------------------------------------+
-| **Copyright**   | Copyright (c) 2017-2020, Oregon State University |
+| **Copyright**   | Copyright (c) 2017-2021, Oregon State University |
 +-----------------+--------------------------------------------------+
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may

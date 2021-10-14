@@ -2,8 +2,8 @@
 # Cookbook:: openstack-integration-test
 # Recipe:: setup
 #
-# Copyright:: 2014, Rackspace US, Inc.
-# Copyright:: 2017-2020, Oregon State university
+# Copyright:: 2014-2021, Rackspace US, Inc.
+# Copyright:: 2017-2021, Oregon State university
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.

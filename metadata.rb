@@ -9,13 +9,13 @@ version          '20.0.0'
   supports os
 end
 
-depends 'bind', '~> 3.0.0'
+depends 'bind', '~> 3.0'
 depends 'openstackclient'
 depends 'openstack-common', '>= 20.0.0'
 depends 'openstack-dns', '>= 20.0.0'
 depends 'openstack-image', '>= 20.0.0'
-depends 'resolver', '>= 3.0.0'
+depends 'resolver', '>= 3.0'
 
 issues_url 'https://launchpad.net/openstack-chef'
 source_url 'https://opendev.org/openstack/cookbook-openstack-integration-test'
-chef_version '>= 15.8'
+chef_version '>= 16.0'
