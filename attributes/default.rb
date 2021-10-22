@@ -63,43 +63,63 @@ default['openstack']['integration-test'] = {
 
 # platform-specific settings
 case node['platform_family']
-when 'fedora', 'rhel' # :pragma-foodcritic: ~FC024 - won't fix this
-  default['openstack']['integration-test']['platform'] = {
-    tempest_packages:
-      %w(
-        git
-        curl
-        libxslt-devel
-        libxml2-devel
-        python-testrepository
-        libffi-devel
-        python-devel
-        python-gabbi
-        python-testscenarios
-        python-ddt
-      ),
-    package_overrides: '',
-  }
+when 'rhel'
+  case node['platform_version'].to_i
+  when 8
+    default['openstack']['integration-test']['platform'] = {
+      tempest_packages:
+        %w(
+          curl
+          git
+          libffi-devel
+          libxml2-devel
+          libxslt-devel
+          python3-ddt
+          python3-gabbi
+          python3-testrepository
+          python3-testscenarios
+          python36-devel
+        ),
+      package_overrides: '',
+    }
+  when 7
+    default['openstack']['integration-test']['platform'] = {
+      tempest_packages:
+        %w(
+          curl
+          git
+          libffi-devel
+          libxml2-devel
+          libxslt-devel
+          python-ddt
+          python-devel
+          python-gabbi
+          python-testrepository
+          python-testscenarios
+        ),
+      package_overrides: '',
+    }
+  end
 when 'debian'
   default['openstack']['integration-test']['platform'] = {
     'tempest_packages' =>
       %w(
-        git
         curl
-        libssl-dev
+        git
         libffi-dev
-        python-dev
+        libffi-dev
+        libpq-dev
+        libssl-dev
+        libxml2-dev
         libxml2-dev
         libxslt1-dev
-        libpq-dev
-        libxml2-dev
         libxslt-dev
-        testrepository
+        python-ddt
         python-dev
-        libffi-dev
+        python-dev
         python-gabbi
         python-testscenarios
-        python-ddt
+        testrepository
       ),
     'package_overrides' => '',
   }
